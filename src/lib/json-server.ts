@@ -27,7 +27,7 @@ export type TodosData = {
 
 const jsonServerUrl = import.meta.env.VITE_JSONSERVER_URL;
 
-const JsonServer = async(data: JsonSeverData) => {
+async function JsonServer(data: JsonSeverData){
   const bookData: BookData = data.payload!;
   switch (data.type){
     case "profile":
@@ -48,8 +48,7 @@ const JsonServer = async(data: JsonSeverData) => {
     default:
       return Error;
   }
-
-};
+}
 
 const Todos = async(todosData: TodosData) =>{
 
@@ -94,7 +93,6 @@ const Todos = async(todosData: TodosData) =>{
       throw new Error("Can't handle this command in Todos!");
 
   }
-
 }
 
 const Profile = async (profileData: ProfileData) => {
@@ -108,8 +106,8 @@ const Profile = async (profileData: ProfileData) => {
         if (!response.ok) {
           throw new Error(`Response status: ${response.status}`);
         }
-        const json = await response.json();
-        return json;
+        const jsonResponse = await response.json();
+        return jsonResponse;
       } catch (error) {
         //console.error(error.message);
         return null;
@@ -117,8 +115,12 @@ const Profile = async (profileData: ProfileData) => {
     }
     case 'edit-picturesearch':
     { 
-      const response = await axios.get(`${jsonServerUrl}/profile`);
-      const newData = {...response.data, 'picture_search': profileData.picture_search};
+      const response = await fetch(`${jsonServerUrl}/profile`);
+      if (!response.ok) {
+        throw new Error(`Response status: ${response.status}`);
+      }
+      const jsonResponse = await response.json();
+      const newData = {...jsonResponse, 'picture_search': profileData.picture_search};
       await axios.put(`${jsonServerUrl}/profile`, newData);
       break;
     }
