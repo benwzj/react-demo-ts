@@ -1,26 +1,34 @@
 import { useEffect, useState } from "react";
-import classNames from 'classnames';
 import Link from './router/link';
-import ReactDemoLogo from './rd-logo';
-import JsonServer, {JsonSeverData} from '../lib/json-server';
+import { ReactDemoLogo, ConnectionBar } from './rd-logo';
+import { getConnection } from '../lib/json-server';
+
 
 const noConnectionHint = 'No Server Connection!';
 
 function Sidebar() {
 
-  const [connection, setConnection] = useState(noConnectionHint);
+  const [connectServer, setConnectServer] = useState(noConnectionHint);
+  const [connected, setConnected] = useState(false);
 
   useEffect (()=>{
-      const testConnection = async() => {
-      
-      const data: JsonSeverData = {type: 'profile'};
-      const conn = await JsonServer (data);
-      // console.log("testConnection");
-      console.log(conn);
-      if (conn) 
-        setConnection (conn.connection);    
-      else
-        setConnection (noConnectionHint);  
+    const testConnection = async() => {
+      console.log("testConnection");
+      try {
+        const connection = await getConnection();
+        if (connection){
+          setConnectServer (connection);   
+          setConnected (true);
+        }
+        else{
+          setConnectServer (noConnectionHint);  
+          setConnected (false);
+        }
+      }catch (e){
+        console.log(e);
+        setConnectServer (noConnectionHint);  
+        setConnected (false);
+      }
     }
 
     const repeatServerConnectionTest = async() => {
@@ -68,16 +76,10 @@ function Sidebar() {
         {renderedLinks}
       </div>
       <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block md:mt-2"></div>
-      <div className={classNames(
-          "flex h-[48px] items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3",
-          {
-            "text-red-600": connection === noConnectionHint,
-          },
-          {
-            "text-green-600": connection !== noConnectionHint,
-          }
-        )}>
-        {connection}
+      <div 
+        className="flex h-[48px] items-center justify-center gap-2 rounded-md bg-gray-50 p-3 text-sm font-medium md:flex-none md:justify-start md:p-2 md:px-3"
+      >
+        <ConnectionBar connected={connected} text={connectServer}/>
       </div>
     </div>
   );

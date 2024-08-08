@@ -141,6 +141,6 @@
   "profile": {
     "todos_showactive": false,
     "picture_search": "bird",
-    "connection": "Connect to Json Dummy Server"
+    "connection": "Json Server"
   }
 }
