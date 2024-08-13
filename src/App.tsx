@@ -1,5 +1,7 @@
 import Navbar from './components/navbar';
 import Route from './components/router/route';
+import PictureSearchPage from './pages/picture-search';
+import BooksManagePage from './pages/books-manage';
 
 function App() {
 
@@ -10,7 +12,7 @@ function App() {
       </div>
       <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
         <Route path="/">
-          <div>this is Root</div>
+          <PictureSearchPage/>
         </Route>
         <Route path="/ui-test">
           This is UITestPage
@@ -19,7 +21,7 @@ function App() {
           This is TodosPage
         </Route>
         <Route path="/bookmanage">
-          This is BooksManagePage
+          <BooksManagePage/>
         </Route>
       </div>
     </div>

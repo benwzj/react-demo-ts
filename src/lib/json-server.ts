@@ -1,9 +1,13 @@
 //import axios from 'axios';
 
 import {
-  ConnectionOperation,
-  PictureSearchOperation,
+  ProfileOperation,
   PictureSearchUpdateOperation,
+  Book,
+  BooksGetOperation,
+  BookCreateOperation,
+  BookDeleteOperation,
+  BookUpdateOperation
 } from './types';
 
 const jsonServerUrl = import.meta.env.VITE_JSONSERVER_URL;
@@ -39,9 +43,7 @@ async function jsonserverFetch<T>({
           'Content-Type': 'application/json',
           ...headers
         },
-        body: JSON.stringify({
-          ...(variables && { variables })
-        }),
+        body: JSON.stringify(variables)
       });
     }
     if (!request) {
@@ -66,22 +68,20 @@ async function jsonserverFetch<T>({
 }
 
 export async function getConnection(): Promise<string | undefined> {
-  const res = await jsonserverFetch<ConnectionOperation> ({
+  const res = await jsonserverFetch<ProfileOperation> ({
     method: 'GET',
-    url: jsonServerUrl+'/profile'
+    url: jsonServerUrl + '/profile'
   });
-  // console.log('getConnection response body: ')
-  // console.log(res.body);
   if (res.body.connection) {
     return res.body.connection;
   }
   return undefined;
 }
 
-export async function getPictureSearch(): Promise<string | undefined> {
-  const res = await jsonserverFetch<PictureSearchOperation>({
+export async function getPictureSearchTerm(): Promise<string | undefined> {
+  const res = await jsonserverFetch<ProfileOperation>({
     method: 'GET',
-    url: jsonServerUrl+'/profile'
+    url: jsonServerUrl + '/profile'
   });
 
   if (res.body.picture_search) {
@@ -90,20 +90,21 @@ export async function getPictureSearch(): Promise<string | undefined> {
   return undefined;
 }
 
-export async function updatePictureSearch(picture_search: string): Promise<string | undefined> {
-  const res = await jsonserverFetch<PictureSearchUpdateOperation>({
+export async function updatePictureSearchTerm(
+  picture_search: string
+): Promise<string | undefined> {
+  const res = await jsonserverFetch<ProfileOperation>({
     method: 'GET',
-    url: jsonServerUrl+'/profile'
+    url: jsonServerUrl + '/profile'
   });
 
   if (!res.body) {
     return undefined;
   }
   const newProfile = {...res.body, 'picture_search': picture_search};
-
   const res2 = await jsonserverFetch<PictureSearchUpdateOperation>({
     method: 'PUT',
-    url: jsonServerUrl+'/profile',
+    url: jsonServerUrl + '/profile',
     variables: newProfile
   });
   if (res2.body.picture_search) {
@@ -111,6 +112,53 @@ export async function updatePictureSearch(picture_search: string): Promise<strin
   }
   return undefined;
 
+}
+
+export async function getBooks(): Promise<Array<Book> | undefined> {
+  const res = await jsonserverFetch<BooksGetOperation>({
+    method: 'GET',
+    url: jsonServerUrl + '/books'
+  });
+
+  if (res.body) {
+    return res.body;
+  }
+  return undefined;
+}
+
+export async function createBook(book: Omit<Book, "id">): Promise<Book | undefined> {
+  const res = await jsonserverFetch<BookCreateOperation>({
+    method: 'POST',
+    url: jsonServerUrl + '/books',
+    variables: book
+  });
+  if (res.body) {
+    return res.body;
+  }
+  return undefined;
+}
+
+export async function deleteBook(id: string): Promise<Book | undefined> {
+  const res = await jsonserverFetch<BookDeleteOperation>({
+    method: 'DELETE',
+    url: jsonServerUrl + '/books/' + id,
+  });
+  if (res.body) {
+    return res.body;
+  }
+  return undefined;
+}
+
+export async function updateBook(book: Book): Promise<Book | undefined> {
+  const res = await jsonserverFetch<BookUpdateOperation>({
+    method: 'PUT',
+    url: jsonServerUrl + '/books/' + book.id,
+    variables: {name: book.name, like: book.like}
+  });
+  if (res.body) {
+    return res.body;
+  }
+  return undefined;
 }
 
 // async function JsonServer(data: JsonSeverData){

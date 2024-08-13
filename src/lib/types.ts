@@ -5,22 +5,55 @@ export type Profile = {
   todos_showactive: boolean;
 };
 
+export type Book = {
+  id: string;
+  name: string;
+  like: number;
+};
+
+export type PictureUnsplash = {
+  id: string;
+  urls: {
+    full: string;
+    small: string;
+  };
+  alt_description: string;
+};
+
 export type ProfileOperation = {
   data: Profile;
-}
-
-export type ConnectionOperation = {
-  data: Profile;
-}
-
-export type PictureSearchOperation = {
-  data: Profile;
-}
+};
 
 export type PictureSearchUpdateOperation = {
   data: Profile;
   variables: Profile;
-}
+};
+
+export type BooksGetOperation = {
+  data: Array<Book>;
+};
+
+export type BookCreateOperation = {
+  data: Book;
+  variables: Omit<Book, "id">;
+};
+
+export type BookDeleteOperation = {
+  data: Book;
+  variables: string;
+};
+
+export type BookUpdateOperation = {
+  data: Book;
+  variables: Omit<Book, "id">;
+};
+
+////////////////////////////////////////////////////////////////////
+
+export type ProfileData = {
+  type: string;
+  picture_search?: string;
+};
 
 export type JsonSeverData = {
   type: "todos"|"books"|"profile"|"cooler_pads";
@@ -34,11 +67,6 @@ export type BookData = {
   like?: number;
 }
 
-export type ProfileData = {
-  type: string;
-  picture_search?: string;
-}
-
 export type TodosData = {
   type: string;
   id?: string;
@@ -46,3 +74,4 @@ export type TodosData = {
   completed?: boolean;
   showactive?: boolean;
 }
+

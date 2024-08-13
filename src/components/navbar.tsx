@@ -13,7 +13,7 @@ function Sidebar() {
 
   useEffect (()=>{
     const testConnection = async() => {
-      console.log("testConnection");
+      //console.log("testConnection");
       try {
         const connection = await getConnection();
         if (connection){
