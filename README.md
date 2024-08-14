@@ -8,6 +8,10 @@ ReactDemo is a Demo app to run through many React Feature, like nevigation, cont
 - This app can to connect to JSON sever for managing data and make it works properly. 
 - Start JSON Sever by: `npm run server` under `this app directionary` in terminor.
 - ReactDemo doesn't use "react-router-dom" to handld router. It implement it's own one.
+- UITest Page display the way of using tailwind CSS, custom components, etc.
+- Todos Page is using it's own CSS to style.
+- Picture Search Page can search picture according to the text.
+
 
 ## JSONServer
 [Morn info](https://www.npmjs.com/package/json-server)
@@ -90,6 +94,8 @@ ReactDOM.render(element, document.body)
 ## Dropdown component
 
 Dropdown can substitute select element. You can easily change the outlook to fit your expectation.
+
+
 
 ## FAQ
 

@@ -11,6 +11,12 @@ export type Book = {
   like: number;
 };
 
+export type Todo = {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
 export type PictureUnsplash = {
   id: string;
   urls: {
@@ -46,6 +52,24 @@ export type BookDeleteOperation = {
 export type BookUpdateOperation = {
   data: Book;
   variables: Omit<Book, "id">;
+};
+
+export type TodosGetOperation = {
+  data: Array<Todo>;
+};
+
+export type TodoCreateOperation = {
+  data: Todo;
+  variables: Omit<Todo, "id">;
+};
+
+export type TodoUpdateOperation = {
+  data: Todo;
+  variables: Omit<Todo, "id">;
+};
+export type TodoDeleteOperation = {
+  data: Todo;
+  variables: string;
 };
 
 ////////////////////////////////////////////////////////////////////

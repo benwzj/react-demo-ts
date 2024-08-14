@@ -7,7 +7,12 @@ import {
   BooksGetOperation,
   BookCreateOperation,
   BookDeleteOperation,
-  BookUpdateOperation
+  BookUpdateOperation,
+  Todo,
+  TodosGetOperation,
+  TodoCreateOperation,
+  TodoDeleteOperation,
+  TodoUpdateOperation
 } from './types';
 
 const jsonServerUrl = import.meta.env.VITE_JSONSERVER_URL;
@@ -161,6 +166,90 @@ export async function updateBook(book: Book): Promise<Book | undefined> {
   return undefined;
 }
 
+export async function getTodos(): Promise<Array<Todo> | undefined> {
+  const res = await jsonserverFetch<TodosGetOperation>({
+    method: 'GET',
+    url: jsonServerUrl + '/todos'
+  });
+
+  if (res.body) {
+    return res.body;
+  }
+  return undefined;
+}
+
+export async function createTodo(todo: Omit<Todo, "id">): Promise<Todo | undefined> {
+  const res = await jsonserverFetch<TodoCreateOperation>({
+    method: 'POST',
+    url: jsonServerUrl + '/todos',
+    variables: todo
+  });
+  if (res.body) {
+    return res.body;
+  }
+  return undefined;
+}
+
+export async function deleteTodo(id: string): Promise<Todo | undefined> {
+  const res = await jsonserverFetch<TodoDeleteOperation>({
+    method: 'DELETE',
+    url: jsonServerUrl + '/todos/' + id,
+  });
+  if (res.body) {
+    return res.body;
+  }
+  return undefined;
+}
+
+export async function updateTodo(todo: Todo): Promise<Todo | undefined> {
+  const res = await jsonserverFetch<TodoUpdateOperation>({
+    method: 'PUT',
+    url: jsonServerUrl + '/todos/' + todo.id,
+    variables: {text: todo.text, completed: todo.completed}
+  });
+  console.log('updateTodo: ')
+  console.log(res)
+  if (res.body) {
+    return res.body;
+  }
+  return undefined;
+}
+
+export async function getTodoShowActive(): Promise<boolean | undefined> {
+  const res = await jsonserverFetch<ProfileOperation>({
+    method: 'GET',
+    url: jsonServerUrl + '/profile'
+  });
+
+  if (res.body.todos_showactive) {
+    return res.body.todos_showactive;
+  }
+  return undefined;
+}
+
+export async function updateTodoShowActive(
+  todos_showactive: boolean
+): Promise<boolean | undefined> {
+  const res = await jsonserverFetch<ProfileOperation>({
+    method: 'GET',
+    url: jsonServerUrl + '/profile'
+  });
+
+  if (!res.body) {
+    return undefined;
+  }
+  const newProfile = {...res.body, 'todos_showactive': todos_showactive};
+  const res2 = await jsonserverFetch<PictureSearchUpdateOperation>({
+    method: 'PUT',
+    url: jsonServerUrl + '/profile',
+    variables: newProfile
+  });
+  if (res2.body.todos_showactive) {
+    return res2.body.todos_showactive;
+  }
+  return undefined;
+
+}
 // async function JsonServer(data: JsonSeverData){
 //   const bookData: BookData = data.payload!;
 //   switch (data.type){

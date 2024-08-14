@@ -2,6 +2,8 @@ import Navbar from './components/navbar';
 import Route from './components/router/route';
 import PictureSearchPage from './pages/picture-search';
 import BooksManagePage from './pages/books-manage';
+import UITestPage from './pages/ui-test';
+import TodosPage from './pages/todos';
 
 function App() {
 
@@ -15,10 +17,10 @@ function App() {
           <PictureSearchPage/>
         </Route>
         <Route path="/ui-test">
-          This is UITestPage
+          <UITestPage/>
         </Route>
         <Route path="/todos">
-          This is TodosPage
+          <TodosPage/>
         </Route>
         <Route path="/bookmanage">
           <BooksManagePage/>

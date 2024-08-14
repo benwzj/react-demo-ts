@@ -39,7 +39,7 @@
     },
     {
       "text": "100 push upkkdjejkjelldd fedf ",
-      "completed": true,
+      "completed": false,
       "id": "107"
     },
     {
@@ -66,6 +66,11 @@
       "text": "new one",
       "completed": true,
       "id": "117"
+    },
+    {
+      "id": "bb49",
+      "text": "new in ts",
+      "completed": false
     }
   ],
   "cooler_pads": [
