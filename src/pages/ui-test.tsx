@@ -119,6 +119,7 @@ export default function UITestPage() {
           <i className="fas fa-pen" />
           <i className="fas fa-fire" />
           <i className="fas fa-home" />
+          <i className="fas fa-rocket" />
         </div>
       </div>
       <div className='border border-orange-500 p-4 m-2'>

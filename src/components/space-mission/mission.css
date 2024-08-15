@@ -1,0 +1,205 @@
+
+.Mission-container{
+  margin: 2vw; 
+  border-radius: 3px;
+  background-color: white;
+}
+.Search-container{
+  /* position: relative; */
+  display: flex;
+  flex-wrap: wrap;
+  /* //overflow: hidden;
+  //height: 15vh; */
+  padding: 1vw;
+  background-color: #f9fafa;
+  border-bottom: 1px solid #ccc;
+  
+  input[type=text], select {
+    width: 100%;
+    font-size: medium;
+    padding: 10px 20px;
+    /* // margin-top: 12px;
+    // margin-bottom: 8px; */
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+  .searchLabel{
+    font-size: large;
+    font-weight: 800;
+  }
+
+  .keyworks{
+    /* // display: flex;
+    // flex-direction: column;
+    // justify-content: space-evenly; */
+    padding: 3% 1%;
+    width: 28%;
+    min-width: 180px;
+  }
+  .launchPad{
+    /* // display: flex;
+    // flex-direction: column;
+    // justify-content: space-evenly; */
+    padding: 3% 1%;
+    width: 28%;
+    min-width: 200px;
+  }
+  .minYear{
+    /* // display: flex;
+    // flex-direction: column;
+    // justify-content: space-evenly; */
+    padding: 3% 1%;
+    width: 15%;
+    min-width: 140px;
+  }
+  .maxYear{
+    /* // display: flex;
+    // flex-direction: column;
+    // justify-content: space-evenly;
+    //border: 1px solid greenyellow; */
+    padding: 3% 1%;
+    width: 15%;
+    min-width: 140px;
+   
+  }
+  .apply{
+    /* // display: flex;
+    // flex-direction: column;
+    // justify-content: space-evenly;
+    // align-items: center; 
+    //border: 1px solid greenyellow; */
+    padding: 3% 1%;
+    width: 14%;
+    min-width: 120px;
+   
+    .button{
+      width: 100%;
+      background-color: #1fbba6;
+      color: white;
+      font-size: large;
+      font-weight: 800;
+      padding: 0.5em 0.5em;
+      /* //margin: 8px 0; */
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+  }
+}
+.missionlist-container{
+  padding: 1% 1%;
+  .mi-count{
+    padding: 0.5em 0;
+    display: flex;
+    justify-content: center;
+    font-weight: 800;
+    font-size: large;
+    color: grey;
+  }
+  .mi-spacer{
+    height: 1px;
+    background-color:#f0f0f0;
+  }
+}
+
+.missionitem-container{
+  display: flex;
+  /* //height: 20vh; */
+}
+.missionitem-container-s{
+  display: flex;
+  flex-direction: column;
+  /* //height: 20vh; */
+}
+.missionitem-icon{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1vw;
+  width: 12%;
+  min-width: 100px;
+  img {
+    width: 70%;
+  }
+}
+
+.missionitem-info{
+  display: flex;
+  flex-direction: column;
+  padding: .5em 0;
+  width: 76%;
+}
+.mi-title{
+  font-weight: 800;
+  padding: 0.5em 0;
+  i{
+    color: red;
+    font-style: normal;
+  }
+}
+.mi-subtitle{
+  font-weight: 300;
+  color: grey;
+  padding: 0.5em 0;
+}
+.mi-links{
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0.8em 0;
+  color: grey;
+  a{
+    color: inherit;
+    text-decoration: none;
+  }
+  .mi-button{
+    margin-right: 1vw; 
+    margin-bottom: 2px;
+    padding: 3px 1vw;
+    border-radius: 3px;
+    border: 2px solid #eaecef;
+  }
+}
+
+.missionitem-id{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 12%;
+  padding: 20px;
+  font-size: 200%;
+  font-weight: 900;
+}
+.missionitem-container-s{
+  display: flex;
+  flex-direction: column;
+}
+.missionitem-icon-id-container-s{
+  display: flex;
+}
+.missionitem-icon-s{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1vw;
+  width: 50%;
+  img {
+    width: 70%;
+  }
+}
+.missionitem-id-s{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+  padding: 20px;
+  font-size: 200%;
+  font-weight: 900;
+}
+.missionitem-info-s{
+  display: flex;
+  flex-direction: column;
+  padding: .5em 0;
+  width: 100%;
+}

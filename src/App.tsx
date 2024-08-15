@@ -4,6 +4,7 @@ import PictureSearchPage from './pages/picture-search';
 import BooksManagePage from './pages/books-manage';
 import UITestPage from './pages/ui-test';
 import TodosPage from './pages/todos';
+import SpaceMissionPage from './pages/space-mission';
 
 function App() {
 
@@ -24,6 +25,9 @@ function App() {
         </Route>
         <Route path="/bookmanage">
           <BooksManagePage/>
+        </Route>
+        <Route path="/space-mission">
+          <SpaceMissionPage/>
         </Route>
       </div>
     </div>

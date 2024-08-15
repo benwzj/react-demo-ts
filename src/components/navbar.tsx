@@ -4,11 +4,11 @@ import { ReactDemoLogo, ConnectionBar } from './rd-logo';
 import { getConnection } from '../lib/json-server';
 
 
-const noConnectionHint = 'No Server Connection!';
+const g_noConnectionHint = 'No Server Connection!';
 
 function Sidebar() {
 
-  const [connectServer, setConnectServer] = useState(noConnectionHint);
+  const [connectServer, setConnectServer] = useState(g_noConnectionHint);
   const [connected, setConnected] = useState(false);
 
   useEffect (()=>{
@@ -21,12 +21,12 @@ function Sidebar() {
           setConnected (true);
         }
         else{
-          setConnectServer (noConnectionHint);  
+          setConnectServer (g_noConnectionHint);  
           setConnected (false);
         }
       }catch (e){
         console.log(e);
-        setConnectServer (noConnectionHint);  
+        setConnectServer (g_noConnectionHint);  
         setConnected (false);
       }
     }
@@ -45,7 +45,8 @@ function Sidebar() {
     { label: 'Picture Search', path: '/' ,icon: "fas fa-image"},
     { label: 'Manage Books', path: '/bookmanage', icon: "fas fa-book"},
     { label: 'UI Test', path: '/ui-test', icon: "fas fa-water"},
-    { label: 'Todos', path: '/todos', icon: "fas fa-list"}
+    { label: 'Todos', path: '/todos', icon: "fas fa-list"},
+    { label: 'Space Mission', path: '/space-mission', icon: "fas fa-rocket"}
   ];
 
   const renderedLinks = links.map((link) => {

@@ -1,17 +1,17 @@
-# React + TypeScript 
-
 ## What is this App
 
 ReactDemo is a Demo app to run through many React Feature, like nevigation, controlled input, using API, handle list, using TypeScript.
 
 - This app is using React + TypeScript + Vite.
+- This app works propertly in mobile device.
 - This app can to connect to JSON sever for managing data and make it works properly. 
 - Start JSON Sever by: `npm run server` under `this app directionary` in terminor.
 - ReactDemo doesn't use "react-router-dom" to handld router. It implement it's own one.
 - UITest Page display the way of using tailwind CSS, custom components, etc.
 - Todos Page is using it's own CSS to style.
 - Picture Search Page can search picture according to the text.
-
+- Book manage Page is showing how to implement REST APIs.
+- Space Missions Page is a CSS exercise.
 
 ## JSONServer
 [Morn info](https://www.npmjs.com/package/json-server)
@@ -103,3 +103,4 @@ Dropdown can substitute select element. You can easily change the outlook to fit
   - use `unknown`.
   - use `fetch()`.
 - How to use `axios` with `async/await`.
+- `scroll-behavior: smooth;` not working

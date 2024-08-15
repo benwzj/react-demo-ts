@@ -1,0 +1,56 @@
+
+.header-container {
+  /* position: absolute; */
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+  max-width: 100%;  /* added */
+  display: flex;
+  flex-direction: column;
+  color: white;
+  background-image: url('./space-photo.jpeg');
+  background-size: cover;
+  .header-title1 {
+    padding-left: 4vw;
+    padding-top: 2vh;
+    height: 10vh;
+    font-weight: 400;
+    /* border: 1px solid orange; */
+  }
+  .header-title2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+    font-size: 250%;
+    font-weight: 900;
+    text-align: center;
+    color: white;
+    overflow: clip;
+    /* border: 1px solid greenyellow; */
+  }
+  .header-footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 10vh;
+    color: white;
+    .chevron{
+      width: 60px;
+      fill: white;
+      &:hover {
+        color: #f39c12;
+        animation: bounce 0.5s infinite;
+      }
+    }
+  }
+}
+@keyframes bounce {
+  25% {
+    transform: translatey(5px);
+  }
+  75% {
+    transform: translatey(-5px);
+  }
+}

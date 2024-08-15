@@ -1,0 +1,10 @@
+.footer-container{
+  display: flex;
+  justify-content: space-between;
+  height: 5vh;
+  margin: 10px 30px; 
+  color: grey;
+  a {
+    color: inherit;
+}
+}
