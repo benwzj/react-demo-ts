@@ -1,5 +1,3 @@
-//import axios from 'axios';
-
 import {
   ProfileOperation,
   PictureSearchUpdateOperation,
@@ -32,31 +30,15 @@ async function jsonserverFetch<T>({
   variables?: ExtractVariables<T>;
 }): Promise<{ status: number; body: ExtractData<T> } | never>  {
   try {
-    let request;
-    if (method === 'GET' || method === 'DELETE'){
-      request = new Request (url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          ...headers
-        }
-      });
-    }else if (method === 'POST' || method === 'PUT'){
-      request = new Request (url, {
-        method,
-        headers: {
-          'Content-Type': 'application/json',
-          ...headers
-        },
-        body: JSON.stringify(variables)
-      });
+    const requestOptions: Record<string, unknown> =  {
+      method,
+      headers: {
+        'Content-Type': 'application/json',
+        ...headers
+      }
     }
-    if (!request) {
-      throw {
-        error: 'Invalid request!'
-      }; 
-    }
-    const result = await fetch(request);
+    if (variables) requestOptions.body = JSON.stringify(variables);
+    const result = await fetch (url, requestOptions);
 
     const body = await result.json();
 

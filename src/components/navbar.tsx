@@ -44,9 +44,10 @@ function Sidebar() {
   const links = [
     { label: 'Picture Search', path: '/' ,icon: "fas fa-image"},
     { label: 'Manage Books', path: '/bookmanage', icon: "fas fa-book"},
-    { label: 'UI Test', path: '/ui-test', icon: "fas fa-water"},
+    { label: 'UI Test', path: '/ui-test', icon: "fas fa-syringe"},
     { label: 'Todos', path: '/todos', icon: "fas fa-list"},
-    { label: 'Space Mission', path: '/space-mission', icon: "fas fa-rocket"}
+    { label: 'Space Mission', path: '/space-mission', icon: "fas fa-rocket"},
+    { label: 'GraphQL Client', path: '/graphql', icon: "fas fa-chart-pie"}
   ];
 
   const renderedLinks = links.map((link) => {

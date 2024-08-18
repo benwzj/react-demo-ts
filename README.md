@@ -57,7 +57,9 @@ import { FaEarthOceania } from "react-icons/fa6";
 
 ### Font Awesome Icons
 
-Font Awesome Icons looks better than react-icons
+- Font Awesome Icons looks better than react-icons.
+- Check icon at: https://fontawesome.com/icons
+- There are a few of icons which are free.
 
 #### Old setup method
 - Firstly, create an account in Font Awesome, and login, then you can create Font Awesome Kit. You can choose to create JS embeded code or CSS embeded code. Both of them are downloadable.
@@ -95,6 +97,10 @@ ReactDOM.render(element, document.body)
 
 Dropdown can substitute select element. You can easily change the outlook to fit your expectation.
 
+## Space Missions Page
+This React App can fetch rocket launchs data from Data Server, filter and display launchs.
+
+## GraphQL Client Page
 
 
 ## FAQ

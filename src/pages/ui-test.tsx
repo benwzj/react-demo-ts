@@ -68,7 +68,7 @@ export default function UITestPage() {
               Styling based on sibling state
             </h3>
             <span className="m-1 block text-sm font-medium text-slate-700">Email</span>
-            <input type="email" className="peer border border-cyan-400 rounded-md px-2"/>
+            <input type="email" className="peer border border-cyan-400 rounded-md px-2 focus:outline-none"/>
             <p className="mt-2 mb-0 invisible peer-invalid:visible text-pink-600 text-sm">
               Provide a valid email address.
             </p>
@@ -120,6 +120,10 @@ export default function UITestPage() {
           <i className="fas fa-fire" />
           <i className="fas fa-home" />
           <i className="fas fa-rocket" />
+          <i className="fas fa-hippo" />
+          <i className="fas fa-spider" />
+          <i className="fas fa-water"/>
+          <i className="fas fa-skull"/>
         </div>
       </div>
       <div className='border border-orange-500 p-4 m-2'>

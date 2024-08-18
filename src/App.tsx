@@ -5,6 +5,7 @@ import BooksManagePage from './pages/books-manage';
 import UITestPage from './pages/ui-test';
 import TodosPage from './pages/todos';
 import SpaceMissionPage from './pages/space-mission';
+import GraphQLClientPage from './pages/graphql-client';
 
 function App() {
 
@@ -28,6 +29,9 @@ function App() {
         </Route>
         <Route path="/space-mission">
           <SpaceMissionPage/>
+        </Route>
+        <Route path="/graphql">
+          <GraphQLClientPage/>
         </Route>
       </div>
     </div>
