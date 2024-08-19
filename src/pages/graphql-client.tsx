@@ -1,16 +1,55 @@
-
+import { RxMagnifyingGlass } from "react-icons/rx";
 
 export default function GraphQLClientPage() {
   return (
-    <>
-      <Operation/>
-    </>
+    <div className="flex flex-col border w-full h-full">
+      <EndPoint />
+      <div className="flex grow">
+        <div className="flex flex-col w-full">
+          <Operation/>
+          <Variable/>
+        </div>
+        <Response/>
+      </div>
+    </div>
+  )
+}
+
+const EndPoint = () =>{
+  return (
+    <div className="flex justify-between md:mt-8 dark:bg-gray-800 ">
+      <div className="relative flex flex-1 ">
+        <label htmlFor="search" className="sr-only">
+          Search
+        </label>
+        <input 
+          className="peer block w-full border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500 focus:border-blue-500  text-gray-800 bg-white dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 focus:outline-none  "
+          placeholder="End Point"
+          id="search"
+        />
+        <RxMagnifyingGlass className="absolute left-3 top-5 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+      </div> 
+      <button 
+        className="flex items-center justify-center px-4 font-medium text-white transition-colors dark:hover:bg-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:bg-gray-400"
+      > 
+        <span className="hidden md:block">Set End Point</span>{' '}
+        <RxMagnifyingGlass className="md:ml-4" />
+      </button>  
+    </div>
+  )
+}
+
+const Response = ()=>{
+  return (
+    <div className="h-full w-full p-2">
+      This is Response text area.
+    </div>
   )
 }
 
 const Operation = () => {
   return (
-    <div className="w-full mb-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+    <div className="flex flex-col w-full grow border border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
       <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
         <div className=" dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">Operation</div>
         <div className="flex items-center  justify-end px-3 dark:border-gray-600">
@@ -46,10 +85,46 @@ const Operation = () => {
           </div>
         </div>
       </div>
-      <div className="px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
+      <div className="flex flex-col grow px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
           <label htmlFor="editor" className="sr-only">Publish post</label>
-          <textarea id="editor" rows={8} className="block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 focus:outline-none" placeholder="Write an article..." required ></textarea>
+          <textarea 
+            id="editor" 
+            className="grow block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 focus:outline-none" 
+            placeholder="Write Operation ..." 
+            required 
+          >
+          </textarea>
       </div>
     </div>
   )
 }
+
+const Variable = () =>{
+  return (
+    <div className="flex flex-col w-full grow border border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+      <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
+        <div className=" dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">Variable</div>
+        <div className="flex items-center  justify-end px-3 dark:border-gray-600">
+          <button type="button" className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+            <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
+              <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM10.5 6a1.5 1.5 0 1 1 0 2.999A1.5 1.5 0 0 1 10.5 6Zm2.221 10.515a1 1 0 0 1-.858.485h-8a1 1 0 0 1-.9-1.43L5.6 10.039a.978.978 0 0 1 .936-.57 1 1 0 0 1 .9.632l1.181 2.981.541-1a.945.945 0 0 1 .883-.522 1 1 0 0 1 .879.529l1.832 3.438a1 1 0 0 1-.031.988Z"/>
+              <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
+            </svg>
+            <span className="sr-only">Upload image</span>
+          </button>
+        </div>
+      </div>
+      <div className="flex flex-col grow px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
+          <label htmlFor="editor" className="sr-only">Publish post</label>
+          <textarea 
+            id="editor" 
+            className="block w-full grow px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 focus:outline-none" 
+            placeholder="Write Variable ..." 
+            required 
+          >
+          </textarea>
+      </div>
+    </div>
+  )
+}
+

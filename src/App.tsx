@@ -14,7 +14,7 @@ function App() {
       <div className="w-full flex-none md:w-64">
         <Navbar/>
       </div>
-      <div className="flex-grow p-6 md:overflow-y-auto md:p-12">
+      <div className="grow md:overflow-y-auto">
         <Route path="/">
           <PictureSearchPage/>
         </Route>

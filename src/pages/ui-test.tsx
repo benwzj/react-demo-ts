@@ -44,7 +44,7 @@ export default function UITestPage() {
   };
 
   return (
-    <div>
+    <div className="p-6 md:p-10">
       <div className="border border-orange-500 p-2 m-2">
         <div>Tailwind pseudo-class: </div>
         <div className='flex flex-wrap justify-start'>

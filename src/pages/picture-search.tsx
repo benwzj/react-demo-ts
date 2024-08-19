@@ -37,7 +37,7 @@ export default function PictureSearchPage() {
   },[]);
 
   return (
-    <div>
+    <div className="p-6 md:p-10">
       <div className="flex w-full items-center justify-between">
         <h1 className={"text-4xl text-blue-700 font-serif font-bold"}>Picture Search</h1>
       </div>
