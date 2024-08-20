@@ -1,36 +1,63 @@
+import { useState } from "react";
 import { RxMagnifyingGlass } from "react-icons/rx";
+import ReactJson from 'react-json-view';
+import { graqhqlFetch } from '../lib/graqhql-client';
+
 
 export default function GraphQLClientPage() {
+  const [endPoint, setEndPoint] = useState('');
+  const [response, setResponse] = useState<unknown | undefined>(undefined);
+  // const [variable, setVariable] = useState('');
+
+  const handleEndPoint = (update: string) =>{
+    setEndPoint (update);
+  }
+  const handleResponse = (update: unknown) =>{
+    setResponse (update);
+  }
+  // const handleVariable = (update: string) =>{
+  //   setVariable (update);
+  // }
+
   return (
     <div className="flex flex-col border w-full h-full">
-      <EndPoint />
+      <EndPoint endPoint={endPoint} onUpdateEndPoint={handleEndPoint}/>
       <div className="flex grow">
-        <div className="flex flex-col w-full">
-          <Operation/>
-          <Variable/>
-        </div>
-        <Response/>
+        <Operation endPoint={endPoint} onResponse={handleResponse}/>
+        <Response response={response}/>
       </div>
     </div>
   )
 }
 
-const EndPoint = () =>{
+const EndPoint = ({
+  endPoint, 
+  onUpdateEndPoint
+}: {
+  endPoint: string; 
+  onUpdateEndPoint: (update: string)=> void
+}) => {
+  
+  const [endPointInput, setEndPointInput] = useState(endPoint)
+
   return (
-    <div className="flex justify-between md:mt-8 dark:bg-gray-800 ">
+    <div className="flex justify-between border border-gray-200 dark:bg-gray-800 ">
       <div className="relative flex flex-1 ">
         <label htmlFor="search" className="sr-only">
           Search
         </label>
         <input 
-          className="peer block w-full border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500 focus:border-blue-500  text-gray-800 bg-white dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 focus:outline-none  "
+          className="peer block w-full py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500 focus:border-blue-500  text-gray-800 bg-white dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 focus:outline-none  "
           placeholder="End Point"
           id="search"
+          value={endPointInput}
+          onChange={(e)=>setEndPointInput(e.target.value)}
         />
         <RxMagnifyingGlass className="absolute left-3 top-5 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
       </div> 
       <button 
-        className="flex items-center justify-center px-4 font-medium text-white transition-colors dark:hover:bg-slate-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:bg-gray-400"
+        className="flex items-center justify-center px-4 font-medium transition-colors bg-slate-100 hover:bg-slate-200 focus:bg-slate-400 dark:bg-slate-500 dark:text-white  dark:hover:bg-slate-600 disabled:bg-gray-400"
+        onClick={()=>onUpdateEndPoint(endPointInput)}
       > 
         <span className="hidden md:block">Set End Point</span>{' '}
         <RxMagnifyingGlass className="md:ml-4" />
@@ -39,69 +66,75 @@ const EndPoint = () =>{
   )
 }
 
-const Response = ()=>{
+const Response = ({response}:{response: unknown})=>{
+  let jsonDisplay;
+  if ( typeof response === 'object') 
+    jsonDisplay = response;
+
   return (
-    <div className="h-full w-full p-2">
-      This is Response text area.
+    <div className="h-full flex-1 p-2 border bg-cyan-100">
+      <ReactJson src={jsonDisplay} />
     </div>
   )
 }
 
-const Operation = () => {
+const Operation = ({
+  endPoint, 
+  onResponse
+}: {
+  endPoint: string; 
+  onResponse: (json: unknown)=>void
+}) => {
+
+  const [queryInput, setQueryInput] = useState('');
+  const [variableInput, setVariableInput] = useState('');
+
+  const sendOperation = async() =>{
+    if (! endPoint) {
+      console.log ('end point is empty!')
+      return;
+    }
+    const res = await graqhqlFetch ({endpoint: endPoint, query: queryInput});
+    if (res){
+      onResponse (res);
+    }
+  }
+
   return (
-    <div className="flex flex-col w-full grow border border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+    <div className="flex flex-col w-full flex-1 border border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
       <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
-        <div className=" dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">Operation</div>
-        <div className="flex items-center  justify-end px-3 dark:border-gray-600">
+        <div className=" dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">Query</div>
+        <div className="flex items-center justify-end px-3 dark:border-gray-600">
           <button type="button" className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
             <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 20">
               <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M1 6v8a5 5 0 1 0 10 0V4.5a3.5 3.5 0 1 0-7 0V13a2 2 0 0 0 4 0V6"/>
             </svg>
             <span className="sr-only">Embed map</span>
           </button>
-          <button type="button" className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-            <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 19 19">
-              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 1h5m0 0v5m0-5-5 5M1.979 6V1H7m0 16.042H1.979V12M18 12v5.042h-5M13 12l5 5M2 1l5 5m0 6-5 5"/>
-            </svg>
-            <span className="sr-only">Full screen</span>
-          </button>
-          <button type="button" className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-            <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
-              <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM10.5 6a1.5 1.5 0 1 1 0 2.999A1.5 1.5 0 0 1 10.5 6Zm2.221 10.515a1 1 0 0 1-.858.485h-8a1 1 0 0 1-.9-1.43L5.6 10.039a.978.978 0 0 1 .936-.57 1 1 0 0 1 .9.632l1.181 2.981.541-1a.945.945 0 0 1 .883-.522 1 1 0 0 1 .879.529l1.832 3.438a1 1 0 0 1-.031.988Z"/>
-              <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.98 2.98 0 0 0 .13 5H5Z"/>
-            </svg>
-            <span className="sr-only">Upload image</span>
-          </button>
-          <button type="button" className="flex items-center gap-2 p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:bg-indigo-400 dark:text-gray-50 dark:hover:text-white dark:hover:bg-gray-400">
+          <button 
+            type="button" 
+            className="flex items-center gap-2 p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:bg-indigo-400 dark:text-gray-50 dark:hover:text-white dark:hover:bg-gray-400"
+            onClick={()=>sendOperation()}
+          >
             <svg className="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
               <path d="M8 0a7.992 7.992 0 0 0-6.583 12.535 1 1 0 0 0 .12.183l.12.146c.112.145.227.285.326.4l5.245 6.374a1 1 0 0 0 1.545-.003l5.092-6.205c.206-.222.4-.455.578-.7l.127-.155a.934.934 0 0 0 .122-.192A8.001 8.001 0 0 0 8 0Zm0 11a3 3 0 1 1 0-6 3 3 0 0 1 0 6Z"/>
             </svg>
             <div>Run it</div>
-            <span className="sr-only">Upload image</span>
+            <span className="sr-only">Run it</span>
           </button>
-          <div id="tooltip-fullscreen" role="tooltip" className="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
-              Show full screen
-              <div className="tooltip-arrow" data-popper-arrow></div>
-          </div>
         </div>
       </div>
       <div className="flex flex-col grow px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
-          <label htmlFor="editor" className="sr-only">Publish post</label>
-          <textarea 
-            id="editor" 
-            className="grow block w-full px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 focus:outline-none" 
-            placeholder="Write Operation ..." 
-            required 
-          >
-          </textarea>
+        <label htmlFor="Query" className="sr-only">Query</label>
+        <textarea 
+          id="Query" 
+          className="grow block w-full px-0 text-sm text-gray-800 bg-white resize-none border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 focus:outline-none" 
+          placeholder="Write Query ..." 
+          value={queryInput}
+          onChange={(e)=>setQueryInput(e.target.value)}
+        >
+        </textarea>
       </div>
-    </div>
-  )
-}
-
-const Variable = () =>{
-  return (
-    <div className="flex flex-col w-full grow border border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
       <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
         <div className=" dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">Variable</div>
         <div className="flex items-center  justify-end px-3 dark:border-gray-600">
@@ -115,16 +148,17 @@ const Variable = () =>{
         </div>
       </div>
       <div className="flex flex-col grow px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
-          <label htmlFor="editor" className="sr-only">Publish post</label>
-          <textarea 
-            id="editor" 
-            className="block w-full grow px-0 text-sm text-gray-800 bg-white border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 focus:outline-none" 
-            placeholder="Write Variable ..." 
-            required 
-          >
-          </textarea>
+        <label htmlFor="Variable" className="sr-only">Variable</label>
+        <textarea 
+          id="Variable" 
+          className="block w-full grow px-0 text-sm text-gray-800 resize-none bg-white border-0 focus:outline-none focus:ring-0 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 " 
+          placeholder="Write Variable ..." 
+          value={variableInput}
+          onChange={(e)=>{setVariableInput(e.target.value)}}
+        >
+        </textarea>
       </div>
+
     </div>
   )
 }
-

@@ -82,11 +82,11 @@ function ImageList ({images}: {images: Array<unknown> | null}) {
 
 function SearchBar({onSubmit, term}: {onSubmit: (newTerm: string)=>void, term: string}) {
 
-  const [Input, setInput] = useState(term);
+  const [input, setInput] = useState(term);
 
   const handleFormSubmit = (event: React.FormEvent) => {
     event.preventDefault();
-    onSubmit(Input);
+    onSubmit(input);
     setInput ('');
   };
 
@@ -104,7 +104,7 @@ function SearchBar({onSubmit, term}: {onSubmit: (newTerm: string)=>void, term: s
           <input 
             className="peer block w-full rounded-md border border-gray-200 py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500 focus:outline-none focus:ring focus:border-blue-500  "
             placeholder={term} 
-            value={Input} 
+            value={input} 
             onChange={handleChange} 
             id="search"
           />
@@ -112,7 +112,7 @@ function SearchBar({onSubmit, term}: {onSubmit: (newTerm: string)=>void, term: s
         </div> 
         <button 
           className="flex h-10 items-center justify-center rounded-lg bg-blue-600 px-4 font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 disabled:bg-gray-400"
-          disabled={Input===''}
+          disabled={input===''}
         >
           <span className="hidden md:block">Search Picture</span>{' '}
           <RxMagnifyingGlass className="md:ml-4" />
