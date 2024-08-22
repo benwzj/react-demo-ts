@@ -4,14 +4,6 @@
     "picture_search": "HK",
     "connection": "Json Server"
   },
-  "graphql":{
-    "end_piont": "http://localhost:4000/",
-    "operations": [
-      {
-        "query": "query getGames{  games{id    title    platform  } }"
-      }
-    ]
-  },
   "books": [
     {
       "name": "Levin",

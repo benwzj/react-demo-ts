@@ -10,7 +10,9 @@ import {
   TodosGetOperation,
   TodoCreateOperation,
   TodoDeleteOperation,
-  TodoUpdateOperation
+  TodoUpdateOperation,
+  Graphql,
+  GraphqlOperation
 } from './types';
 
 const jsonServerUrl = import.meta.env.VITE_JSONSERVER_URL;
@@ -232,145 +234,15 @@ export async function updateTodoShowActive(
   return undefined;
 
 }
-// async function JsonServer(data: JsonSeverData){
-//   const bookData: BookData = data.payload!;
-//   switch (data.type){
-//     case "profile":
-//     {
-//       return await Profile (bookData);
-//     }
-    
-//     case "books":
-//     {  
-      
-//       return await BooksManagement (bookData);
-//     }
-//     case "todos":
-//     {  
-//       return await Todos (bookData);
-      
-//     }
-//     default:
-//       return Error;
-//   }
-// }
 
-// const Todos = async(todosData: TodosData) =>{
+export async function getGraphql(): Promise<Graphql | undefined> {
+  const res = await jsonserverFetch<GraphqlOperation>({
+    method: 'GET',
+    url: jsonServerUrl + '/graphql'
+  });
 
-//   switch (todosData.type){
-
-//     case 'create-todo':
-//     {
-//       const response = await axios.post(jsonServerUrl+'/todos', {
-//         text:todosData.text, completed: todosData.completed
-//       });
-//       return response.data;
-//     }
-//     case 'get-todos':
-//     {
-//       const response = await axios.get(jsonServerUrl+'/todos');
-//       return response.data;
-//     }
-//     case 'edit-todo':
-//     {
-//       const response = await axios.put(`${jsonServerUrl}/todos/${todosData.id}`, {
-//         text: todosData.text, completed: todosData.completed
-//       });
-//       return response.data;
-//     }
-//     case 'delete-todo':
-//       await axios.delete(`${jsonServerUrl}/todos/${todosData.id}`);
-//       break; 
-
-//     case 'get-todos-showactive':
-//     {  
-//       const response = await axios.get(`${jsonServerUrl}/profile`);
-//       return response.data;
-//     }
-//     case 'edit-todos-showactive':
-//     {  
-//       const response = await axios.get(`${jsonServerUrl}/profile`);
-//       const newData = {...response.data, 'todos_showactive': todosData.showactive};
-//       await axios.put(jsonServerUrl+'/profile', newData);
-//       break;
-//     }
-//     default:
-//       throw new Error("Can't handle this command in Todos!");
-
-//   }
-// }
-
-// const Profile = async (profileData: ProfileData) => {
-
-//   switch (profileData.type)
-//   {
-//     case "connection":
-//     {
-//       try {
-//         const response = await fetch(jsonServerUrl+'/profile');
-//         if (!response.ok) {
-//           throw new Error(`Response status: ${response.status}`);
-//         }
-//         const jsonResponse = await response.json();
-//         return jsonResponse;
-//       } catch (error) {
-//         //console.error(error.message);
-//         return null;
-//       }
-//     }
-//     case 'edit-picturesearch':
-//     { 
-//       const response = await fetch(`${jsonServerUrl}/profile`);
-//       if (!response.ok) {
-//         throw new Error(`Response status: ${response.status}`);
-//       }
-//       const jsonResponse = await response.json();
-//       const newData = {...jsonResponse, 'picture_search': profileData.picture_search};
-//       await axios.put(`${jsonServerUrl}/profile`, newData);
-//       break;
-//     }
-
-//     case 'get-picturesearch':
-//     {
-//       const response = await axios.get(`${jsonServerUrl}/profile`);
-//       return response.data;
-//     }
-//     default:
-//       throw new Error("Can't handle this command in Profile!");
-//   }
-// }
-
-// const BooksManagement = async(bookData: BookData)=>{
-
-//   switch (bookData.type){
-
-//     case 'create-book':
-//     {
-//       const response = await axios.post(jsonServerUrl+'/books', {
-//         name: bookData.name, like: 0
-//       });
-//       return response.data;
-//     }
-
-//     case 'get-books':
-//     {
-//       const response = await axios.get(jsonServerUrl+'/books');
-//       return response.data;
-//     }
-//     case 'delete-book':
-//       await axios.delete(`${jsonServerUrl}/books/${bookData.id}`);
-//       break;
-
-//     case 'edit-book':
-//     {
-//       const response = await axios.put(`${jsonServerUrl}/books/${bookData.id}`, {
-//         name: bookData.name, like: bookData.like
-//       });
-//       return response.data;
-//     }
-//     default:
-//       throw new Error("Can't handle this command in Book Mangement!");
-//   }
-// }
-
-// export default JsonServer;
+  if (res.body) {
+    return res.body;
+  }
+  return undefined;
+}

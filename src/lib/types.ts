@@ -26,6 +26,20 @@ export type PictureUnsplash = {
   alt_description: string;
 };
 
+export type Graphql = {
+  end_point: string;
+  Opertions: Array<{
+    name: string;
+    query: string;
+    variables: unknown;
+    headers: unknown;
+  }>;
+} ;
+
+export type GraphqlOperation = {
+  data: Graphql;
+} ;
+
 export type ProfileOperation = {
   data: Profile;
 };

@@ -28,7 +28,7 @@ under this app folder: run this command in terminal: `npm run server`
 For example, you want to store states for your new functionality in this App, you can add a new `data.type`. And add cor-responsed resource in `db.json`.
 
 ### Files for JSONServer:
-- `db.json` is the database file for JSONServer. It is plain text file.
+- `db.json` is the database file for JSONServer. It is plain text file. It's format is same with `db-sample.json`.
 - `api.http` is the JSONServer test file. it is support by a VSCode plugin.
 
 ## Using Unsplash photo API
