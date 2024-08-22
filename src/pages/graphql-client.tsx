@@ -5,30 +5,73 @@ import { graqhqlFetch } from '../lib/graqhql-client';
 
 
 export default function GraphQLClientPage() {
-  const [endPoint, setEndPoint] = useState('');
-  const [response, setResponse] = useState<unknown | undefined>(undefined);
-  // const [variable, setVariable] = useState('');
 
-  const handleEndPoint = (update: string) =>{
-    setEndPoint (update);
-  }
+  const [response, setResponse] = useState<unknown | undefined>(undefined);
+
   const handleResponse = (update: unknown) =>{
     setResponse (update);
   }
-  // const handleVariable = (update: string) =>{
-  //   setVariable (update);
-  // }
 
   return (
-    <div className="flex flex-col border w-full h-full">
-      <EndPoint endPoint={endPoint} onUpdateEndPoint={handleEndPoint}/>
-      <div className="flex grow">
-        <Operation endPoint={endPoint} onResponse={handleResponse}/>
-        <Response response={response}/>
-      </div>
+    <div className="flex border w-full h-screen">
+      <Operation onResponse={handleResponse}/>
+      <Response response={response}/>
     </div>
   )
 }
+
+const Response = ({
+  response
+}:{
+  response: unknown
+})=>{
+
+  const jsonDisplay = (typeof response === 'object' && response != null) ?
+    response : 
+    {data: 'something wrong'};
+
+  return (
+    <div className="block flex-1 p-2 border h-full bg-cyan-100 overflow-auto">
+      <ReactJson src={jsonDisplay}/>
+    </div>
+  )
+}
+
+const Operation = ({
+  onResponse
+}: {
+  onResponse: (json: unknown)=>void
+}) => {
+  
+  const [endPoint, setEndPoint] = useState('');
+  const [query, setQuery] = useState('');
+  const [variable, setVariable] = useState('');
+
+  const sendOperation = async() =>{
+    if (!endPoint) {
+      onResponse ({data: 'End Point is empty!'});
+      return;
+    }
+    const res = await graqhqlFetch ({endpoint: endPoint, query: query});
+    onResponse (res);
+  }
+
+  return (
+    <div className="flex flex-col w-full flex-1 border border-gray-200 bg-gray-100 dark:bg-gray-700 dark:border-gray-600">
+      <EndPoint 
+        endPoint={endPoint} 
+        onUpdateEndPoint={(update)=>setEndPoint(update)}/>
+      <Query 
+        query={query} 
+        onUpdateQuery={(update)=>setQuery(update)} 
+        sendOperation={sendOperation}/>
+      <Variable
+        variable={variable} 
+        onUpdateVariable={(update)=>setVariable(update)}/>
+    </div>
+  )
+}
+
 
 const EndPoint = ({
   endPoint, 
@@ -37,11 +80,9 @@ const EndPoint = ({
   endPoint: string; 
   onUpdateEndPoint: (update: string)=> void
 }) => {
-  
-  const [endPointInput, setEndPointInput] = useState(endPoint)
 
   return (
-    <div className="flex justify-between border border-gray-200 dark:bg-gray-800 ">
+    <div className="flex justify-between dark:bg-gray-800 ">
       <div className="relative flex flex-1 ">
         <label htmlFor="search" className="sr-only">
           Search
@@ -50,60 +91,38 @@ const EndPoint = ({
           className="peer block w-full py-[9px] pl-10 text-sm outline-2 placeholder:text-gray-500 focus:border-blue-500  text-gray-800 bg-white dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 focus:outline-none  "
           placeholder="End Point"
           id="search"
-          value={endPointInput}
-          onChange={(e)=>setEndPointInput(e.target.value)}
+          value={endPoint}
+          onChange={(e)=>onUpdateEndPoint(e.target.value)}
         />
         <RxMagnifyingGlass className="absolute left-3 top-5 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
       </div> 
-      <button 
+      {/* <button 
         className="flex items-center justify-center px-4 font-medium transition-colors bg-slate-100 hover:bg-slate-200 focus:bg-slate-400 dark:bg-slate-500 dark:text-white  dark:hover:bg-slate-600 disabled:bg-gray-400"
         onClick={()=>onUpdateEndPoint(endPointInput)}
       > 
         <span className="hidden md:block">Set End Point</span>{' '}
         <RxMagnifyingGlass className="md:ml-4" />
-      </button>  
+      </button>   */}
     </div>
   )
 }
 
-const Response = ({response}:{response: unknown})=>{
-  let jsonDisplay;
-  if ( typeof response === 'object') 
-    jsonDisplay = response;
 
-  return (
-    <div className="h-full flex-1 p-2 border bg-cyan-100">
-      <ReactJson src={jsonDisplay} />
-    </div>
-  )
-}
-
-const Operation = ({
-  endPoint, 
-  onResponse
+const Query = ({
+  query, 
+  onUpdateQuery,
+  sendOperation
 }: {
-  endPoint: string; 
-  onResponse: (json: unknown)=>void
+  query: string; 
+  onUpdateQuery: (update: string)=> void;
+  sendOperation: ()=>void;
 }) => {
-
-  const [queryInput, setQueryInput] = useState('');
-  const [variableInput, setVariableInput] = useState('');
-
-  const sendOperation = async() =>{
-    if (! endPoint) {
-      console.log ('end point is empty!')
-      return;
-    }
-    const res = await graqhqlFetch ({endpoint: endPoint, query: queryInput});
-    if (res){
-      onResponse (res);
-    }
-  }
-
   return (
-    <div className="flex flex-col w-full flex-1 border border-gray-200 bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+    <>
       <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
-        <div className=" dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">Query</div>
+        <div className=" dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+          Query
+        </div>
         <div className="flex items-center justify-end px-3 dark:border-gray-600">
           <button type="button" className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
             <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 20">
@@ -124,19 +143,34 @@ const Operation = ({
           </button>
         </div>
       </div>
-      <div className="flex flex-col grow px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
+      <div className="flex flex-col grow px-4 py-2 bg-white dark:bg-gray-800">
         <label htmlFor="Query" className="sr-only">Query</label>
         <textarea 
           id="Query" 
           className="grow block w-full px-0 text-sm text-gray-800 bg-white resize-none border-0 dark:bg-gray-800 focus:ring-0 dark:text-white dark:placeholder-gray-400 focus:outline-none" 
           placeholder="Write Query ..." 
-          value={queryInput}
-          onChange={(e)=>setQueryInput(e.target.value)}
+          value={query}
+          onChange={(e)=>onUpdateQuery(e.target.value)}
         >
         </textarea>
       </div>
+    </>
+  )
+}
+
+const Variable = ({
+  variable, 
+  onUpdateVariable
+}: {
+  variable: string; 
+  onUpdateVariable: (update: string)=> void;
+}) => {
+  return (
+    <>
       <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
-        <div className=" dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">Variable</div>
+        <div className=" dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+          Variable
+        </div>
         <div className="flex items-center  justify-end px-3 dark:border-gray-600">
           <button type="button" className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
             <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
@@ -147,18 +181,17 @@ const Operation = ({
           </button>
         </div>
       </div>
-      <div className="flex flex-col grow px-4 py-2 bg-white rounded-b-lg dark:bg-gray-800">
+      <div className="flex flex-col grow px-4 py-2 bg-white dark:bg-gray-800">
         <label htmlFor="Variable" className="sr-only">Variable</label>
         <textarea 
           id="Variable" 
           className="block w-full grow px-0 text-sm text-gray-800 resize-none bg-white border-0 focus:outline-none focus:ring-0 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 " 
           placeholder="Write Variable ..." 
-          value={variableInput}
-          onChange={(e)=>{setVariableInput(e.target.value)}}
+          value={variable}
+          onChange={(e)=>{onUpdateVariable(e.target.value)}}
         >
         </textarea>
       </div>
-
-    </div>
+    </>
   )
 }
