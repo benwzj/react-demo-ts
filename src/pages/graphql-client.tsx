@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ReactJson from 'react-json-view';
-// import { getGraphql } from '../lib/json-server';
+import { getGraphql } from '../lib/json-server';
 import { graqhqlFetch } from '../lib/graqhql-client';
+import { GraphqlOperation } from '../lib/types';
 
 
 export default function GraphQLClientPage() {
@@ -44,18 +45,53 @@ const Operation = ({
 }) => {
   
   const [endPoint, setEndPoint] = useState('');
+  const [operations, setOperations] = useState <Array<GraphqlOperation>> ([])
   const [query, setQuery] = useState('');
-  const [variables, setVariables] = useState('');
+  const [variables, setVariables] = useState<object | undefined>(undefined);
+  const [variablesString, setVariablesString] = useState ('');
+
+  useEffect ( ()=>{ 
+    async function fetchGraphqlParameter() {
+      const res = await getGraphql();
+      if (res) {
+        setOperations (res.operations);
+        setEndPoint (res.end_point);
+      }
+    }
+    fetchGraphqlParameter();
+  }, []);
+
+  const selectOperation = (select: GraphqlOperation) =>{
+    setQuery (select.query);
+    setVariables (select.variables);
+  }
+  const addOperation = ()=>{
+    const newOperation: GraphqlOperation = {name: 'Unnamed', query:'', variables: {}};
+    setOperations ([...operations, newOperation]);
+    selectOperation (newOperation);
+  }
 
   const sendOperation = async() =>{
     if (!endPoint) {
       onResponse ({data: 'End Point is empty!'});
       return;
     }
-
-    const variablesObj = JSON.parse (variables);
-    
-    const res = await graqhqlFetch ({endpoint: endPoint, query: query, variables: variablesObj});
+    if (variablesString !== ''){
+      try{
+        const variablesObj = JSON.parse(variablesString);
+        setVariables (variablesObj);
+      }catch(e){
+        console.log(e);
+        onResponse ({data: 'Something wrong with variables!'});
+        return;
+      }
+    }
+   
+    const res = await graqhqlFetch ({
+      endpoint: endPoint, 
+      query: query, 
+      variables: variables
+    });
     onResponse (res);
   }
 
@@ -64,13 +100,17 @@ const Operation = ({
       <EndPoint 
         endPoint={endPoint} 
         onUpdateEndPoint={(update)=>setEndPoint(update)}/>
+      <Operations 
+        operations={operations} 
+        onSelect={selectOperation}
+        onAdd={addOperation}/>
       <Query 
         query={query} 
         onUpdateQuery={(update)=>setQuery(update)} 
         sendOperation={sendOperation}/>
       <Variables
-        variables={variables} 
-        onUpdateVariables={(update)=>setVariables(update)}/>
+        variables={variablesString} 
+        onUpdateVariables={(update)=>setVariablesString(update)}/>
     </div>
   )
 }
@@ -101,6 +141,40 @@ const EndPoint = ({
   )
 }
 
+const Operations = ({
+  operations,
+  onSelect,
+  onAdd
+}: {
+  operations: Array<GraphqlOperation>;
+  onSelect: (update:GraphqlOperation)=>void;
+  onAdd: ()=>void;
+}) => {
+  const OperationButtons = operations.map ((operation)=>{
+    return (
+      <button 
+        className="my-1 p-2 text-gray-700 cursor-pointer hover:text-gray-900 hover:bg-gray-300 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+        onClick={()=>onSelect(operation)}
+      >
+        {operation.name}
+        <i className="fas fa-delete-left"/>
+      </button>
+    )
+  });
+
+  return (
+    <div className="flex dark:bg-gray-800">
+      {OperationButtons}
+      <button 
+        className="my-1 p-2 text-gray-700 cursor-pointer hover:text-gray-900 hover:bg-gray-300 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+        onClick={()=>onAdd()}
+      >
+        <i className="fas fa-plus"/>
+      </button>
+    </div> 
+  )
+
+}
 
 const Query = ({
   query, 
@@ -118,7 +192,10 @@ const Query = ({
           Query
         </div>
         <div className="flex items-center justify-end px-3 dark:border-gray-600">
-          <button type="button" className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
+          <button 
+            type="button" 
+            className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+          >
             <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 20">
               <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M1 6v8a5 5 0 1 0 10 0V4.5a3.5 3.5 0 1 0-7 0V13a2 2 0 0 0 4 0V6"/>
             </svg>
@@ -159,6 +236,7 @@ const Variables = ({
   variables: string; 
   onUpdateVariables: (update: string)=> void;
 }) => {
+
   return (
     <>
       <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
@@ -181,7 +259,7 @@ const Variables = ({
           id="Variable" 
           className="block w-full grow px-0 text-sm text-gray-800 resize-none bg-white border-0 focus:outline-none focus:ring-0 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 " 
           placeholder="Write Variable ..." 
-          value={variables}
+          value={variables? JSON.stringify(variables) : ''}
           onChange={(e)=>{onUpdateVariables(e.target.value)}}
         >
         </textarea>
@@ -189,3 +267,5 @@ const Variables = ({
     </>
   )
 }
+
+

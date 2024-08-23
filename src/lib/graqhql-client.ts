@@ -7,7 +7,7 @@ export async function graqhqlFetch({
 }: {
   endpoint: string;
   query: string;
-  variables?: string;
+  variables?: object;
   headers?: HeadersInit;
 }): Promise< unknown | undefined > {
   try{

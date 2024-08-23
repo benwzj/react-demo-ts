@@ -12,7 +12,8 @@ import {
   TodoDeleteOperation,
   TodoUpdateOperation,
   Graphql,
-  GraphqlOperation
+  GraphqlGetOperation,
+  GraphqlUpdateOperation
 } from './types';
 
 const jsonServerUrl = import.meta.env.VITE_JSONSERVER_URL;
@@ -236,9 +237,22 @@ export async function updateTodoShowActive(
 }
 
 export async function getGraphql(): Promise<Graphql | undefined> {
-  const res = await jsonserverFetch<GraphqlOperation>({
+  const res = await jsonserverFetch<GraphqlGetOperation>({
     method: 'GET',
     url: jsonServerUrl + '/graphql'
+  });
+
+  if (res.body) {
+    return res.body;
+  }
+  return undefined;
+}
+
+export async function updateGraphql(graphql: Graphql): Promise<Graphql | undefined> {
+  const res = await jsonserverFetch<GraphqlUpdateOperation>({
+    method: 'PUT',
+    url: jsonServerUrl + '/graphql',
+    variables: graphql
   });
 
   if (res.body) {

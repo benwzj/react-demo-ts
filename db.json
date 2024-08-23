@@ -5,9 +5,14 @@
     "connection": "Json Server"
   },
   "graphql":{
-    "end_piont": "http://localhost:4000/",
+    "end_point": "http://localhost:5500/",
     "operations": [
       {
+        "name": "getBooks",
+        "query": "query getGames{  games{id    title    platform  } }"
+      },
+      {
+        "name": "setBook",
         "query": "query getGames{  games{id    title    platform  } }"
       }
     ]
