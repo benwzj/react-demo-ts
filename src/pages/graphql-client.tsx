@@ -213,7 +213,12 @@ const Operation = ({
   const [query, setQuery] = useState ('')
   
   useEffect (()=>{
-    setVariablesString ((operation && operation.variables) ? JSON.stringify(operation.variables) : '');
+    setVariablesString ((
+        operation && 
+        operation.variables && 
+        Object.keys(operation.variables).length > 0
+      ) ? JSON.stringify(operation.variables) : ''
+    );
     setQuery (operation ? operation.query : '');
   },[operation]);
 
@@ -226,25 +231,43 @@ const Operation = ({
       onResponse ({data: 'Current Operation object empty!'});
       return;
     }
+    let variablesObj;
     if (variablesString !== ''){
       try{
-        const variablesObj = JSON.parse(variablesString);
-        operation.variables = variablesObj;
+        variablesObj = JSON.parse(variablesString);
       }catch(e){
         console.log(e);
         onResponse ({data: 'Something wrong with variables!'});
         return;
       }
     }
-    operation.query = query;
+    
     const res = await graqhqlFetch ({
       endpoint: endPoint, 
-      query: operation.query, 
-      variables: operation.variables
+      query: query, 
+      variables: variablesObj
     });
 
-    onResponse (res);
-    onUpdateOperation (operation); /** update db until the operation is sent **/
+    if (res){
+      onResponse (res);
+      const name = abstractName (query);
+      onUpdateOperation ({id: operation.id, query, variables: variablesObj, name}); /** update db until the operation is sent **/
+    }
+  }
+
+  const abstractName = (queryString: string): string => {
+    const noLineBreakString = queryString.replace ('\n', ' ');
+    const findBraceString = noLineBreakString.replace ('{', ' {');
+    const findParenthesesString = findBraceString.replace ('(', ' (');
+    const wordArray = findParenthesesString.split (' ');
+    const noEmptyWordArray = wordArray.filter (a => a.length>0);
+    if (noEmptyWordArray[0] === 'query'
+      || noEmptyWordArray[0] === 'mutation' 
+      && noEmptyWordArray[1])
+    {
+      return noEmptyWordArray[1];
+    }
+    return '';
   }
 
   return (
@@ -287,8 +310,6 @@ const Query = ({
   onUpdateQuery: (update: string)=>void;
 }) => {
 
-  console.log (':Query component:::');
-  console.log (query);
   return (
     <>
       <div className="flex-1 flex flex-col px-4 py-2 bg-white dark:bg-gray-800">
