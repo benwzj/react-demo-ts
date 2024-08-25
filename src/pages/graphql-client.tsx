@@ -1,13 +1,100 @@
 import { useState, useEffect } from "react";
 import ReactJson from 'react-json-view';
-import { getGraphql } from '../lib/json-server';
+import { 
+  getGraphqlEndpoint,
+  getGraphqlOperations, 
+  updateGraphqlOperation,
+  deleteGraphqlOperation,
+  addGraphqlOperation 
+} from '../lib/json-server';
 import { graqhqlFetch } from '../lib/graqhql-client';
 import { GraphqlOperation } from '../lib/types';
+import { FaXmark } from "react-icons/fa6";
 
+const NEW_OPERATION_ID = 'NEW_OPERATION_ID';
 
 export default function GraphQLClientPage() {
 
   const [response, setResponse] = useState<unknown | undefined>(undefined);
+  const [endPoint, setEndPoint] = useState('');
+  const [operations, setOperations] = useState <Array<GraphqlOperation>> ([]);
+  const [
+    currentOperation, 
+    setCurrentOperation
+  ] = useState <GraphqlOperation | undefined> (undefined);
+
+  const selectOperation = (select: GraphqlOperation) =>{
+    setCurrentOperation ({...select});
+    console.log(select)
+  }
+
+  useEffect ( ()=>{ 
+    async function fetchGraphqlParameter() {
+      const res = await getGraphqlOperations();
+      if (res) {
+        setOperations (res);
+        setCurrentOperation ({...res[0]});
+      }
+      const res2 = await getGraphqlEndpoint();
+      if (res2){
+        setEndPoint (res2);
+      }
+    }
+    fetchGraphqlParameter();
+  }, []);
+
+  const addOperation = async ()=>{
+    const newOperation = {
+      id: NEW_OPERATION_ID + Date.now().toString(36),
+      name: 'Unnamed', 
+      query:'', 
+      variables: {}, 
+      headers: {}
+    };
+    setOperations ([...operations, newOperation]);
+    selectOperation (newOperation);
+    // const res = await addGraphqlOperation (newOperation);
+    // if (res)
+    // {
+    //   setOperations ([...operations, res]);
+    //   selectOperation (res);
+    // }
+
+  }
+  const updateOperation = async (operation: GraphqlOperation) =>{
+    const {id, name, query, variables, headers} = operation;
+    let res;
+    if (id.includes(NEW_OPERATION_ID)) {
+      res = await addGraphqlOperation ({name, query, variables, headers});
+      if (res){
+        const newOperations = operations.filter ( o => o.id !== id);
+        setOperations ([...newOperations, res]);
+        selectOperation (res);
+      }
+    }else{
+      res = await updateGraphqlOperation (operation);
+      if (res){
+        const found = operations.find ( o => o.id === id);
+        if (found){
+          found.query = query;
+          found.variables = variables;
+        }
+        selectOperation (res);
+      }
+    }
+
+  }
+
+  const deleteOperation = async (id: string) =>{
+    if (!id.includes(NEW_OPERATION_ID)){
+      const res = await deleteGraphqlOperation (id);
+      console.log ('deleteOperation: ');
+      console.log (res);
+    }
+    setOperations ((bs)=>{
+      return bs.filter ((b)=> b.id !== id)
+    })
+  }
 
   const handleResponse = (update: unknown) =>{
     setResponse (update);
@@ -15,102 +102,25 @@ export default function GraphQLClientPage() {
 
   return (
     <div className="flex border w-full h-screen">
-      <Operation onResponse={handleResponse}/>
+      <div className="flex flex-col w-full flex-1 border border-gray-200 bg-gray-100 dark:bg-gray-700 dark:border-gray-600">
+        <EndPoint 
+          endPoint={endPoint} 
+          onUpdateEndPoint={(update)=>setEndPoint(update)}
+        />
+        <OperationList 
+          operations={operations} 
+          onSelect={selectOperation}
+          onAdd={addOperation}
+          onDelete={deleteOperation}
+        />
+        <Operation 
+          endPoint={endPoint}
+          operation={currentOperation}
+          onUpdateOperation={updateOperation}
+          onResponse={handleResponse}
+        />
+      </div>
       <Response response={response}/>
-    </div>
-  )
-}
-
-const Response = ({
-  response
-}:{
-  response: unknown
-})=>{
-
-  const jsonDisplay = (typeof response === 'object' && response != null) ?
-    response : 
-    {data: 'something wrong!'};
-
-  return (
-    <div className="block flex-1 p-2 border h-full bg-cyan-100 overflow-auto">
-      <ReactJson src={jsonDisplay}/>
-    </div>
-  )
-}
-
-const Operation = ({
-  onResponse
-}: {
-  onResponse: (json: unknown)=>void
-}) => {
-  
-  const [endPoint, setEndPoint] = useState('');
-  const [operations, setOperations] = useState <Array<GraphqlOperation>> ([])
-  const [query, setQuery] = useState('');
-  const [variables, setVariables] = useState<object | undefined>(undefined);
-  const [variablesString, setVariablesString] = useState ('');
-
-  useEffect ( ()=>{ 
-    async function fetchGraphqlParameter() {
-      const res = await getGraphql();
-      if (res) {
-        setOperations (res.operations);
-        setEndPoint (res.end_point);
-      }
-    }
-    fetchGraphqlParameter();
-  }, []);
-
-  const selectOperation = (select: GraphqlOperation) =>{
-    setQuery (select.query);
-    setVariables (select.variables);
-  }
-  const addOperation = ()=>{
-    const newOperation: GraphqlOperation = {name: 'Unnamed', query:'', variables: {}};
-    setOperations ([...operations, newOperation]);
-    selectOperation (newOperation);
-  }
-
-  const sendOperation = async() =>{
-    if (!endPoint) {
-      onResponse ({data: 'End Point is empty!'});
-      return;
-    }
-    if (variablesString !== ''){
-      try{
-        const variablesObj = JSON.parse(variablesString);
-        setVariables (variablesObj);
-      }catch(e){
-        console.log(e);
-        onResponse ({data: 'Something wrong with variables!'});
-        return;
-      }
-    }
-   
-    const res = await graqhqlFetch ({
-      endpoint: endPoint, 
-      query: query, 
-      variables: variables
-    });
-    onResponse (res);
-  }
-
-  return (
-    <div className="flex flex-col w-full flex-1 border border-gray-200 bg-gray-100 dark:bg-gray-700 dark:border-gray-600">
-      <EndPoint 
-        endPoint={endPoint} 
-        onUpdateEndPoint={(update)=>setEndPoint(update)}/>
-      <Operations 
-        operations={operations} 
-        onSelect={selectOperation}
-        onAdd={addOperation}/>
-      <Query 
-        query={query} 
-        onUpdateQuery={(update)=>setQuery(update)} 
-        sendOperation={sendOperation}/>
-      <Variables
-        variables={variablesString} 
-        onUpdateVariables={(update)=>setVariablesString(update)}/>
     </div>
   )
 }
@@ -141,24 +151,35 @@ const EndPoint = ({
   )
 }
 
-const Operations = ({
+const OperationList = ({
   operations,
   onSelect,
-  onAdd
+  onAdd,
+  onDelete
 }: {
   operations: Array<GraphqlOperation>;
-  onSelect: (update:GraphqlOperation)=>void;
+  onSelect: (update: GraphqlOperation)=>void;
   onAdd: ()=>void;
+  onDelete: (id: string)=>void;
 }) => {
+
+  const deleteButtonClick = (e: React.MouseEvent<HTMLButtonElement>, id: string) =>{
+    e.stopPropagation();
+    onDelete(id);
+  }
+
   const OperationButtons = operations.map ((operation)=>{
     return (
-      <button 
-        className="my-1 p-2 text-gray-700 cursor-pointer hover:text-gray-900 hover:bg-gray-300 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+      <div 
+        className="flex items-center my-1 p-2 text-gray-700 cursor-pointer hover:text-gray-900 hover:bg-gray-300 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
         onClick={()=>onSelect(operation)}
+        key={operation.id}
       >
         {operation.name}
-        <i className="fas fa-delete-left"/>
-      </button>
+        <button onClick={(e)=>deleteButtonClick(e, operation.id)}>
+          <FaXmark/>
+        </button>
+      </div>
     )
   });
 
@@ -176,33 +197,65 @@ const Operations = ({
 
 }
 
-const Query = ({
-  query, 
-  onUpdateQuery,
-  sendOperation
+const Operation = ({
+  endPoint,
+  operation,
+  onUpdateOperation,
+  onResponse
 }: {
-  query: string; 
-  onUpdateQuery: (update: string)=> void;
-  sendOperation: ()=>void;
+  endPoint: string;
+  operation: GraphqlOperation | undefined;
+  onUpdateOperation: (operation: GraphqlOperation)=>void;
+  onResponse: (json: unknown)=>void;
 }) => {
+  
+  const [variablesString, setVariablesString] = useState ('');
+  const [query, setQuery] = useState ('')
+  
+  useEffect (()=>{
+    setVariablesString ((operation && operation.variables) ? JSON.stringify(operation.variables) : '');
+    setQuery (operation ? operation.query : '');
+  },[operation]);
+
+  const sendOperation = async() =>{
+    if (!endPoint) {
+      onResponse ({data: 'End Point is empty!'});
+      return;
+    }
+    if (!operation) {
+      onResponse ({data: 'Current Operation object empty!'});
+      return;
+    }
+    if (variablesString !== ''){
+      try{
+        const variablesObj = JSON.parse(variablesString);
+        operation.variables = variablesObj;
+      }catch(e){
+        console.log(e);
+        onResponse ({data: 'Something wrong with variables!'});
+        return;
+      }
+    }
+    operation.query = query;
+    const res = await graqhqlFetch ({
+      endpoint: endPoint, 
+      query: operation.query, 
+      variables: operation.variables
+    });
+
+    onResponse (res);
+    onUpdateOperation (operation); /** update db until the operation is sent **/
+  }
+
   return (
     <>
       <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
-        <div className=" dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-          Query
+        <div className=" dark:text-gray-400">
+          Operation
         </div>
         <div className="flex items-center justify-end px-3 dark:border-gray-600">
           <button 
-            type="button" 
-            className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
-          >
-            <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 12 20">
-              <path stroke="currentColor" stroke-linejoin="round" stroke-width="2" d="M1 6v8a5 5 0 1 0 10 0V4.5a3.5 3.5 0 1 0-7 0V13a2 2 0 0 0 4 0V6"/>
-            </svg>
-            <span className="sr-only">Embed map</span>
-          </button>
-          <button 
-            type="button" 
+            type="submit" 
             className="flex items-center gap-2 p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:bg-indigo-400 dark:text-gray-50 dark:hover:text-white dark:hover:bg-gray-400"
             onClick={()=>sendOperation()}
           >
@@ -214,6 +267,30 @@ const Query = ({
           </button>
         </div>
       </div>
+      <Query 
+        query={query} 
+        onUpdateQuery={(update)=>setQuery(update)}
+      />
+      <Variables
+        variables={variablesString} 
+        onUpdateVariables={(update)=>setVariablesString(update)}
+      />
+    </>
+  )
+}
+
+const Query = ({
+  query, 
+  onUpdateQuery
+}: {
+  query: string;
+  onUpdateQuery: (update: string)=>void;
+}) => {
+
+  console.log (':Query component:::');
+  console.log (query);
+  return (
+    <>
       <div className="flex-1 flex flex-col px-4 py-2 bg-white dark:bg-gray-800">
         <label htmlFor="Query" className="sr-only">Query</label>
         <textarea 
@@ -259,7 +336,7 @@ const Variables = ({
           id="Variable" 
           className="block w-full grow px-0 text-sm text-gray-800 resize-none bg-white border-0 focus:outline-none focus:ring-0 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 " 
           placeholder="Write Variable ..." 
-          value={variables? JSON.stringify(variables) : ''}
+          value={variables}
           onChange={(e)=>{onUpdateVariables(e.target.value)}}
         >
         </textarea>
@@ -268,4 +345,20 @@ const Variables = ({
   )
 }
 
+const Response = ({
+  response
+}:{
+  response: unknown
+})=>{
+
+  const jsonDisplay = (typeof response === 'object' && response != null) ?
+    response : 
+    {data: 'something wrong!'};
+
+  return (
+    <div className="block flex-1 p-2 border h-full bg-cyan-100 overflow-auto">
+      <ReactJson src={jsonDisplay}/>
+    </div>
+  )
+}
 

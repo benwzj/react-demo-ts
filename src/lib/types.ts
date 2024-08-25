@@ -3,6 +3,7 @@ export type Profile = {
   connection: string;
   picture_search: string;
   todos_showactive: boolean;
+  graphql_endpoint: string;
 };
 
 export type Book = {
@@ -27,23 +28,34 @@ export type PictureUnsplash = {
 };
 
 export type GraphqlOperation = {
+  id: string;
   name: string;
   query: string;
-  variables?: object;
+  variables: object | undefined;
   headers?: HeadersInit;
 }
-export type Graphql = {
-  end_point: string;
-  operations: Array<GraphqlOperation>;
-} ;
+// export type Graphql = {
+//   end_point: string;
+//   operations: Array<GraphqlOperation>;
+// } ;
 
-export type GraphqlGetOperation = {
-  data: Graphql;
+export type GraphqlGetOperations = {
+  data: Array<GraphqlOperation>;
 };
 
+export type GraphqlAddOperation = {
+  data: GraphqlOperation;
+  variables: Omit<GraphqlOperation, "id">;
+}
+
 export type GraphqlUpdateOperation = {
-  data: Graphql;
-  variables: Graphql;
+  data: GraphqlOperation;
+  variables: Omit<GraphqlOperation, "id">;
+};
+
+export type GraphqlDeleteOperation = {
+  data: GraphqlOperation;
+  variables: string;
 };
 
 export type ProfileOperation = {

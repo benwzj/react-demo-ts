@@ -11,9 +11,11 @@ import {
   TodoCreateOperation,
   TodoDeleteOperation,
   TodoUpdateOperation,
-  Graphql,
-  GraphqlGetOperation,
-  GraphqlUpdateOperation
+  GraphqlOperation,
+  GraphqlGetOperations,
+  GraphqlUpdateOperation,
+  GraphqlAddOperation,
+  GraphqlDeleteOperation
 } from './types';
 
 const jsonServerUrl = import.meta.env.VITE_JSONSERVER_URL;
@@ -236,10 +238,24 @@ export async function updateTodoShowActive(
 
 }
 
-export async function getGraphql(): Promise<Graphql | undefined> {
-  const res = await jsonserverFetch<GraphqlGetOperation>({
+
+export async function getGraphqlEndpoint(): Promise<string | undefined> {
+  const res = await jsonserverFetch<ProfileOperation> ({
     method: 'GET',
-    url: jsonServerUrl + '/graphql'
+    url: jsonServerUrl + '/profile'
+  });
+  if (res.body.graphql_endpoint) {
+    return res.body.graphql_endpoint;
+  }
+  return undefined;
+}
+
+export async function getGraphqlOperations()
+: Promise<Array<GraphqlOperation> | undefined> {
+
+  const res = await jsonserverFetch<GraphqlGetOperations>({
+    method: 'GET',
+    url: jsonServerUrl + '/graphql_operations'
   });
 
   if (res.body) {
@@ -248,11 +264,48 @@ export async function getGraphql(): Promise<Graphql | undefined> {
   return undefined;
 }
 
-export async function updateGraphql(graphql: Graphql): Promise<Graphql | undefined> {
+export async function updateGraphqlOperation(
+  operation: GraphqlOperation
+): Promise<GraphqlOperation | undefined> {
+
+  const {id, name, query, variables, headers} = operation;
   const res = await jsonserverFetch<GraphqlUpdateOperation>({
     method: 'PUT',
-    url: jsonServerUrl + '/graphql',
-    variables: graphql
+    url: jsonServerUrl + '/graphql_operations/' + id,
+    variables: {name, query, variables, headers}
+  });
+
+  if (res.body) {
+    return res.body;
+  }
+  return undefined;
+}
+
+export async function addGraphqlOperation(
+  operation: Omit<GraphqlOperation, 'id'>
+): Promise<GraphqlOperation | undefined> {
+
+  const {name, query, variables, headers} = operation;
+  const res = await jsonserverFetch<GraphqlAddOperation>({
+    method: 'POST',
+    url: jsonServerUrl + '/graphql_operations',
+    variables: {name, query, variables, headers}
+  });
+
+  if (res.body) {
+    return res.body;
+  }
+  return undefined;
+}
+
+
+export async function deleteGraphqlOperation(
+  id: string
+): Promise<GraphqlOperation | undefined> {
+
+  const res = await jsonserverFetch<GraphqlDeleteOperation>({
+    method: 'DELETE',
+    url: jsonServerUrl + '/graphql_operations/' + id,
   });
 
   if (res.body) {

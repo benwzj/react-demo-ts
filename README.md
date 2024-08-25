@@ -54,6 +54,7 @@ import { FaEarthOceania } from "react-icons/fa6";
 ```
 - But the icons looks not great.
 - Find icons from [here](https://react-icons.github.io/react-icons/)
+- You can find Font Awosome icon here. like (`import { FaXmark } from "react-icons/fa6";`)
 
 ### Font Awesome Icons
 
@@ -102,6 +103,7 @@ This React App can fetch rocket launchs data from Data Server, filter and displa
 
 ## GraphQL Client Page
 
+- 'OperationList' is initiated from JsonServer. User can update the 'operation' in the list, but the operations won't update JsonServer until user Send the operation to GraphqlServer.
 
 ## FAQ
 

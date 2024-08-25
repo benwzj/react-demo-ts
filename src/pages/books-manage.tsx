@@ -29,10 +29,10 @@ export default function BooksManagePage() {
     fetchBooks();
   },[]);
 
-  const handleDeleteBook = async(id: string)=>{
+  const handleDeleteBook = async(id: string) => {
     const res = await deleteBook (id);
     setBooks ((bs)=>{
-      return bs.filter((b)=> b.id !== id)
+      return bs.filter ((b)=> b.id !== id)
     })
     console.log('deleteBook: ');
     console.log(res);
@@ -57,9 +57,15 @@ export default function BooksManagePage() {
 }
 
 
-function BookList (
-  {books, onDelete, onUpdate}: 
-  {books: Array<Book>, onDelete: (id: string)=>void, onUpdate: (book: Book)=>void}){
+function BookList ({
+  books, 
+  onDelete, 
+  onUpdate
+}: {
+  books: Array<Book>, 
+  onDelete: (id: string)=>void, 
+  onUpdate: (book: Book)=>void
+}) {
 
   const renderList = books.map((book)=>{
     return <BookItem key={book.id} book={book} onDelete={onDelete} onUpdate={onUpdate}/>
@@ -110,9 +116,15 @@ function BookCreate ({onCreate}: {onCreate: (name: string)=>void}) {
   )
 }
 
-const BookItem = (
-  {book, onDelete, onUpdate}: 
-  {book: Book, onDelete: (id: string)=>void, onUpdate: (book: Book)=>void}) => {
+const BookItem = ({
+  book, 
+  onDelete, 
+  onUpdate
+}: {
+  book: Book, 
+  onDelete: (id: string)=>void, 
+  onUpdate: (book: Book)=>void
+}) => {
   
   const [editStatus, setEditStatus] = useState(false);
   const [like, setLike] = useState(book.like);
