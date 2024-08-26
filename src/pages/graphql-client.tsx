@@ -217,7 +217,7 @@ const Operation = ({
         operation && 
         operation.variables && 
         Object.keys(operation.variables).length > 0
-      ) ? JSON.stringify(operation.variables) : ''
+      ) ? JSON.stringify(operation.variables, null, ' ') : ''
     );
     setQuery (operation ? operation.query : '');
   },[operation]);
@@ -335,13 +335,33 @@ const Variables = ({
   onUpdateVariables: (update: string)=> void;
 }) => {
 
+  const [current, setCurrent] = useState<'Variables' | 'Headers'> ('Variables');
+  const handleVariablesClick = () =>{
+    setCurrent ('Variables');
+  }
+  const handleHeadersClick = () =>{
+    setCurrent ('Headers');
+  }
+  const handleTextChange = (update: string) =>{
+    if (current === 'Variables')
+      onUpdateVariables(update);
+  }
   return (
     <>
-      <div className="flex items-center justify-between px-3 py-2 border-b dark:border-gray-600">
-        <div className=" dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
-          Variable
+      <div className="flex items-center justify-normal px-3 py-2 border-t dark:border-gray-600 dark:bg-gray-800 dark:text-white">
+        <div 
+          className="my-1 p-2 text-gray-700 cursor-pointer hover:text-gray-900 hover:bg-gray-300 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+          onClick={()=>handleVariablesClick()}
+        >
+          Variables
         </div>
-        <div className="flex items-center  justify-end px-3 dark:border-gray-600">
+        <div 
+          className="my-1 p-2 text-gray-700 cursor-pointer hover:text-gray-900 hover:bg-gray-300 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
+          onClick={()=>handleHeadersClick()}
+        >
+          Headers
+        </div>
+        <div className="flex items-center justify-end px-3 dark:border-gray-600">
           <button type="button" className="p-2 text-gray-500 rounded cursor-pointer hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600">
             <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 20">
               <path d="M14.066 0H7v5a2 2 0 0 1-2 2H0v11a1.97 1.97 0 0 0 1.934 2h12.132A1.97 1.97 0 0 0 16 18V2a1.97 1.97 0 0 0-1.934-2ZM10.5 6a1.5 1.5 0 1 1 0 2.999A1.5 1.5 0 0 1 10.5 6Zm2.221 10.515a1 1 0 0 1-.858.485h-8a1 1 0 0 1-.9-1.43L5.6 10.039a.978.978 0 0 1 .936-.57 1 1 0 0 1 .9.632l1.181 2.981.541-1a.945.945 0 0 1 .883-.522 1 1 0 0 1 .879.529l1.832 3.438a1 1 0 0 1-.031.988Z"/>
@@ -358,7 +378,7 @@ const Variables = ({
           className="block w-full grow px-0 text-sm text-gray-800 resize-none bg-white border-0 focus:outline-none focus:ring-0 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 " 
           placeholder="Write Variable ..." 
           value={variables}
-          onChange={(e)=>{onUpdateVariables(e.target.value)}}
+          onChange={(e)=>handleTextChange(e.target.value)}
         >
         </textarea>
       </div>
@@ -377,7 +397,7 @@ const Response = ({
     {data: 'something wrong!'};
 
   return (
-    <div className="block flex-1 p-2 border h-full bg-cyan-100 overflow-auto">
+    <div className="block flex-1 p-2 border h-full bg-neutral-400 overflow-auto">
       <ReactJson src={jsonDisplay}/>
     </div>
   )
