@@ -27,8 +27,7 @@ function Link({ to, children, className, activeClassName }: LinkProp) {
   return (
     <>
       <a 
-        className={
-          classNames(
+        className={classNames(
             className,
             currentPath===to && activeClassName
           )} 
