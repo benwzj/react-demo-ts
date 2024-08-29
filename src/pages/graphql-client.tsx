@@ -171,7 +171,7 @@ const OperationList = ({
       >
         {operation.name}
         <button onClick={(e)=>deleteButtonClick(e, operation.id)}>
-          <FaXmark/>
+          <FaXmark className="text-rose-700"/>
         </button>
       </div>
     )
@@ -184,7 +184,7 @@ const OperationList = ({
         className="my-1 p-2 text-gray-700 cursor-pointer hover:text-gray-900 hover:bg-gray-300 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
         onClick={()=>onAdd()}
       >
-        <i className="fas fa-plus"/>
+        <i className="fas fa-plus text-green-700"/>
       </button>
     </div> 
   )
@@ -246,17 +246,33 @@ const Operation = ({
         return;
       }
     }
+    let headersObj;
+    if (headersString !== ''){
+      try{
+        headersObj = JSON.parse(headersString);
+      }catch(e){
+        console.log(e);
+        onResponse ({data: 'Something wrong with headers!'});
+        return;
+      }
+    }
     
     const res = await graqhqlFetch ({
       endpoint: endPoint, 
       query: query, 
-      variables: variablesObj
+      variables: variablesObj,
+      headers: headersObj
     });
 
     if (res){
       onResponse (res);
       const name = abstractName (query);
-      onUpdateOperation ({id: operation.id, query, variables: variablesObj, name}); /** update db until the operation is sent **/
+      onUpdateOperation ({
+        id: operation.id, 
+        query, 
+        variables: variablesObj, 
+        headers: headersObj,
+        name}); /** update db until the operation is sent **/
     }
   }
 

@@ -94,6 +94,12 @@ const element = <FontAwesomeIcon icon={faEnvelope} />
 ReactDOM.render(element, document.body)
 ```
 
+### heroicons
+
+https://heroicons.com
+
+You can get **svg** code for your project. 
+
 ## Dropdown component
 
 Dropdown can substitute select element. You can easily change the outlook to fit your expectation.
