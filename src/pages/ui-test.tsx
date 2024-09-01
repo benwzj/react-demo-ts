@@ -6,6 +6,7 @@ import { AiOutlinePicture } from "react-icons/ai";
 import { GiSecretBook } from "react-icons/gi";
 import { GrTest } from "react-icons/gr";
 import { DropDownOption } from '../components/drop-down';
+import mountainImage from '../assets/mountain.avif';
 
 const items = [
   {
@@ -45,6 +46,120 @@ export default function UITestPage() {
 
   return (
     <div className="p-6 md:p-10">
+      <DarkMode />
+      <ObjectFit />
+      <PseudoClass />
+      <div className='border border-orange-500 p-4 m-2'>
+        <div>Accordion:</div>
+        <Accordion items={items} />
+      </div>
+      <div className="flex flex-col border border-orange-500 p-4 m-2">
+        <div>Dropdown: </div>
+        <Dropdown options={options} currentOption={selection} onChange={handleSelect} />
+      </div>
+
+      <div className='border border-orange-500 p-4 m-2'>
+        <div>Font Awesome Icons: </div>
+        <div className='flex gap-2'>
+          <i className="fas fa-trash" />
+          <i className="fas fa-pen" />
+          <i className="fas fa-fire" />
+          <i className="fas fa-home" />
+          <i className="fas fa-rocket" />
+          <i className="fas fa-hippo" />
+          <i className="fas fa-spider" />
+          <i className="fas fa-water"/>
+          <i className="fas fa-skull"/>
+        </div>
+      </div>
+      <div className='border border-orange-500 p-4 m-2'>
+        <div>React Icons: </div>
+        <div className='flex gap-2'>
+          <LuListTodo />
+          <AiOutlinePicture />
+          <GiSecretBook />
+          <GrTest />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function DarkMode (){
+  const [darkMode, setDarkMode] = useState('System');
+  const handleClick = ()=> {
+    if (darkMode === 'System'){ 
+      setDarkMode ('Light');
+      document.documentElement.classList.remove('dark')
+    }else if(darkMode === 'Light'){
+      setDarkMode ('Dark');
+      document.documentElement.classList.add('dark')
+    }else{
+      setDarkMode ('System');
+      if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        document.documentElement.classList.add('dark')
+      }else {
+        document.documentElement.classList.remove('dark')
+      }
+    }
+  }
+  return (
+    <div className="border border-orange-500 p-2 m-2">
+      <div>
+        Tailwind Dark Mode: 
+        <button 
+          onClick={handleClick}
+          className='h-6 w-20 px-1 m-1 rounded-lg font-bold bg-red-300'
+        >
+          {darkMode}
+        </button>
+      </div>
+      <div className="w-1/2 bg-white dark:bg-slate-800 rounded-lg px-6 py-8 ring-1 ring-slate-900/5 shadow-xl">
+        <div>
+          <span className="inline-flex items-center justify-center p-2 bg-indigo-500 rounded-md shadow-lg">
+            <svg className="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">...</svg>
+          </span>
+        </div>
+        <h3 className="text-slate-900 dark:text-white mt-5 text-base font-medium tracking-tight">Writes Upside-Down</h3>
+        <p className="text-slate-500 dark:text-slate-400 mt-2 text-sm">
+          The Zero Gravity Pen can be used to write in any orientation, including upside-down. It even works in outer space.
+        </p>
+      </div>
+    </div>
+  )
+}
+
+function ObjectFit () {
+  return (
+    <>
+      <div className="border border-orange-500 p-2 m-2">
+        <div>Tailwind object-fit: </div>
+        <div className='flex gap-1 overflow-x-auto'>
+          <div className='relative flex-none'>
+            <img className="object-cover h-48 w-96 border border-green-500" src={mountainImage}/>
+            <div className='absolute top-4 left-4 w-44'>object-cover</div>
+          </div>
+          <div className='relative flex-none'>
+            <img className="object-fill h-48 w-96 border border-green-500" src={mountainImage}/>
+            <div className='absolute top-4 left-4 w-44'>object-fill</div>
+          </div>
+          <div className='relative flex-none'>
+            <img className="object-contain h-48 w-96 border border-green-500" src={mountainImage}/>
+            <div className='absolute top-4 left-4 w-44'>object-contain</div>
+          </div>
+          <div className='relative flex-none'>
+            <img className="object-none h-48 w-96 border border-green-500" src={mountainImage}/>
+            <div className='absolute top-4 left-4 w-44'>object-none</div>
+          </div>
+        </div>
+      </div>
+    </>
+  )
+}
+
+function PseudoClass() {
+  return (
+    <>
       <div className="border border-orange-500 p-2 m-2">
         <div>Tailwind pseudo-class: </div>
         <div className='flex flex-wrap justify-start'>
@@ -103,39 +218,7 @@ export default function UITestPage() {
           
         </div>
       </div>
-      <div className='border border-orange-500 p-4 m-2'>
-        <div>Accordion:</div>
-        <Accordion items={items} />
-      </div>
-      <div className="flex flex-col border border-orange-500 p-4 m-2">
-        <div>Dropdown: </div>
-        <Dropdown options={options} currentOption={selection} onChange={handleSelect} />
-      </div>
-
-      <div className='border border-orange-500 p-4 m-2'>
-        <div>Font Awesome Icons: </div>
-        <div className='flex gap-2'>
-          <i className="fas fa-trash" />
-          <i className="fas fa-pen" />
-          <i className="fas fa-fire" />
-          <i className="fas fa-home" />
-          <i className="fas fa-rocket" />
-          <i className="fas fa-hippo" />
-          <i className="fas fa-spider" />
-          <i className="fas fa-water"/>
-          <i className="fas fa-skull"/>
-        </div>
-      </div>
-      <div className='border border-orange-500 p-4 m-2'>
-        <div>React Icons: </div>
-        <div className='flex gap-2'>
-          <LuListTodo />
-          <AiOutlinePicture />
-          <GiSecretBook />
-          <GrTest />
-        </div>
-      </div>
-    </div>
-  );
+    </>
+  )
 }
 
