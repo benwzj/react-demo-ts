@@ -178,7 +178,7 @@ const OperationList = ({
   });
 
   return (
-    <div className="flex dark:bg-gray-800">
+    <div className="flex gap-1 dark:bg-gray-800">
       {OperationButtons}
       <button 
         className="my-1 p-2 text-gray-700 cursor-pointer hover:text-gray-900 hover:bg-gray-300 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-600"
@@ -393,7 +393,7 @@ const VariablesHeaders = ({
   return (
     <>
       <div 
-        className="flex items-center justify-normal px-3 py-2 border-t bg-white dark:border-gray-600 dark:bg-gray-800 dark:text-white"
+        className="flex items-center justify-normal gap-1 px-3 py-2 border-t bg-white dark:border-gray-600 dark:bg-gray-800 dark:text-white"
       >
         <div 
           className={classNames(
