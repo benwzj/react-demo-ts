@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Accordion from '../components/accordion';
 import Dropdown from '../components/drop-down';
 import { LuListTodo } from "react-icons/lu";
@@ -6,6 +6,10 @@ import { AiOutlinePicture } from "react-icons/ai";
 import { GiSecretBook } from "react-icons/gi";
 import { GrTest } from "react-icons/gr";
 import { DropDownOption } from '../components/drop-down';
+import { 
+  getDarkMode,
+  updateDarkMode
+} from '../lib/json-server';
 import mountainImage from '../assets/mountain.avif';
 
 const items = [
@@ -86,16 +90,31 @@ export default function UITestPage() {
 }
 
 function DarkMode (){
+
   const [darkMode, setDarkMode] = useState('System');
-  const handleClick = ()=> {
-    if (darkMode === 'System'){ 
+
+  useEffect (()=>{
+    async function fetchDarkModeFromJsonServer (){
+      const res = await getDarkMode();
+      if (res){
+        setupDarkMode (res)
+      }
+    }
+    fetchDarkModeFromJsonServer ();
+  },[]);
+
+  const setupDarkMode = (mode: string) =>{
+    if (mode === 'Light'){ 
       setDarkMode ('Light');
+      updateDarkMode ('Light')
       document.documentElement.classList.remove('dark')
-    }else if(darkMode === 'Light'){
+    }else if(mode === 'Dark'){
       setDarkMode ('Dark');
+      updateDarkMode ('Dark')
       document.documentElement.classList.add('dark')
-    }else{
+    }else {
       setDarkMode ('System');
+      updateDarkMode ('System');
       if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
         document.documentElement.classList.add('dark')
       }else {
@@ -103,6 +122,17 @@ function DarkMode (){
       }
     }
   }
+
+  const handleClick = ()=> {
+    if (darkMode === 'System'){ 
+      setupDarkMode ('Light')
+    }else if(darkMode === 'Light'){
+      setupDarkMode ('Dark')
+    }else{
+      setupDarkMode ('System')
+    }
+  }
+
   return (
     <div className="border border-orange-500 p-2 m-2">
       <div>

@@ -1,6 +1,6 @@
 import {
   ProfileOperation,
-  PictureSearchUpdateOperation,
+  ProfileUpdateOperation,
   Book,
   BooksGetOperation,
   BookCreateOperation,
@@ -59,6 +59,40 @@ async function jsonserverFetch<T>({
   }
 }
 
+export async function getDarkMode(): Promise<string | undefined> {
+  const res = await jsonserverFetch<ProfileOperation> ({
+    method: 'GET',
+    url: jsonServerUrl + '/profile'
+  })
+  if (res.body.dark_mode) {
+    return res.body.dark_mode;
+  }
+  return undefined;
+}
+
+export async function updateDarkMode(
+  dark_mode: string
+): Promise<string | undefined> {
+  const res = await jsonserverFetch<ProfileOperation>({
+    method: 'GET',
+    url: jsonServerUrl + '/profile'
+  });
+
+  if (!res.body) {
+    return undefined;
+  }
+  const newProfile = {...res.body, 'dark_mode': dark_mode};
+  const res2 = await jsonserverFetch<ProfileUpdateOperation>({
+    method: 'PUT',
+    url: jsonServerUrl + '/profile',
+    variables: newProfile
+  });
+  if (res2.body.dark_mode) {
+    return res2.body.dark_mode;
+  }
+  return undefined;
+
+}
 export async function getConnection(): Promise<string | undefined> {
   const res = await jsonserverFetch<ProfileOperation> ({
     method: 'GET',
@@ -94,7 +128,7 @@ export async function updatePictureSearchTerm(
     return undefined;
   }
   const newProfile = {...res.body, 'picture_search': picture_search};
-  const res2 = await jsonserverFetch<PictureSearchUpdateOperation>({
+  const res2 = await jsonserverFetch<ProfileUpdateOperation>({
     method: 'PUT',
     url: jsonServerUrl + '/profile',
     variables: newProfile
@@ -226,7 +260,7 @@ export async function updateTodoShowActive(
     return undefined;
   }
   const newProfile = {...res.body, 'todos_showactive': todos_showactive};
-  const res2 = await jsonserverFetch<PictureSearchUpdateOperation>({
+  const res2 = await jsonserverFetch<ProfileUpdateOperation>({
     method: 'PUT',
     url: jsonServerUrl + '/profile',
     variables: newProfile

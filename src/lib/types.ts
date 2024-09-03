@@ -4,6 +4,7 @@ export type Profile = {
   picture_search: string;
   todos_showactive: boolean;
   graphql_endpoint: string;
+  dark_mode: string;
 };
 
 export type Book = {
@@ -58,7 +59,7 @@ export type ProfileOperation = {
   data: Profile;
 };
 
-export type PictureSearchUpdateOperation = {
+export type ProfileUpdateOperation = {
   data: Profile;
   variables: Profile;
 };
