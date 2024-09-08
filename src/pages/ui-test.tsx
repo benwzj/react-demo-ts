@@ -51,6 +51,7 @@ export default function UITestPage() {
   return (
     <div className="p-6 md:p-10">
       <DarkMode />
+      <ReactFormTest />
       <ObjectFit />
       <PseudoClass />
       <div className='border border-orange-500 p-4 m-2'>
@@ -61,34 +62,38 @@ export default function UITestPage() {
         <div>Dropdown: </div>
         <Dropdown options={options} currentOption={selection} onChange={handleSelect} />
       </div>
-
-      <div className='border border-orange-500 p-4 m-2'>
-        <div>Font Awesome Icons: </div>
-        <div className='flex gap-2'>
-          <i className="fas fa-trash" />
-          <i className="fas fa-pen" />
-          <i className="fas fa-fire" />
-          <i className="fas fa-home" />
-          <i className="fas fa-rocket" />
-          <i className="fas fa-hippo" />
-          <i className="fas fa-spider" />
-          <i className="fas fa-water"/>
-          <i className="fas fa-skull"/>
-        </div>
-      </div>
-      <div className='border border-orange-500 p-4 m-2'>
-        <div>React Icons: </div>
-        <div className='flex gap-2'>
-          <LuListTodo />
-          <AiOutlinePicture />
-          <GiSecretBook />
-          <GrTest />
-        </div>
-      </div>
+      <IconTest />
     </div>
   );
 }
-
+function handleFormSubmit (){
+  console.log('data');
+}
+function ReactFormTest (){
+  return (
+    <>
+      <div className="border border-orange-500 p-2 m-2">
+        <form onSubmit={handleFormSubmit} className='flex flex-col gap-1'>
+          <label htmlFor="myname">name:</label>
+          <input
+            className="w-60 border border-cyan-400 rounded-md px-2"
+            id="myname"
+            name="myname"
+            type="text"
+          />
+          <label htmlFor="favorite">favorite:</label>
+          <input
+            className="w-60 border border-cyan-400 rounded-md px-2"
+            id="favorite"
+            name="favorite"
+            type="text"
+          />
+          <button className='w-40 border border-purple-500 rounded-md'>Submit</button>
+        </form>
+      </div>
+    </>
+  )
+}
 function DarkMode (){
 
   const [darkMode, setDarkMode] = useState('System');
@@ -252,3 +257,32 @@ function PseudoClass() {
   )
 }
 
+function IconTest () {
+  return (
+    <>
+      <div className='border border-orange-500 p-4 m-2'>
+        <div>Font Awesome Icons: </div>
+        <div className='flex gap-2'>
+          <i className="fas fa-trash" />
+          <i className="fas fa-pen" />
+          <i className="fas fa-fire" />
+          <i className="fas fa-home" />
+          <i className="fas fa-rocket" />
+          <i className="fas fa-hippo" />
+          <i className="fas fa-spider" />
+          <i className="fas fa-water"/>
+          <i className="fas fa-skull"/>
+        </div>
+      </div>
+      <div className='border border-orange-500 p-4 m-2'>
+        <div>React Icons: </div>
+        <div className='flex gap-2'>
+          <LuListTodo />
+          <AiOutlinePicture />
+          <GiSecretBook />
+          <GrTest />
+        </div>
+      </div>
+    </>
+  )
+}
