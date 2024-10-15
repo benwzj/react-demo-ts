@@ -51,7 +51,7 @@ export default function UITestPage() {
   return (
     <div className="p-6 md:p-10">
       <DarkMode />
-      <ReactFormTest />
+      <ReRenderTest />
       <ObjectFit />
       <PseudoClass />
       <div className='border border-orange-500 p-4 m-2'>
@@ -66,34 +66,68 @@ export default function UITestPage() {
     </div>
   );
 }
-function handleFormSubmit (){
-  console.log('data');
-}
-function ReactFormTest (){
+
+function ChildComponent () {
+  const [childState, setChileState] = useState(0);
   return (
-    <>
-      <div className="border border-orange-500 p-2 m-2">
-        <form onSubmit={handleFormSubmit} className='flex flex-col gap-1'>
-          <label htmlFor="myname">name:</label>
-          <input
-            className="w-60 border border-cyan-400 rounded-md px-2"
-            id="myname"
-            name="myname"
-            type="text"
-          />
-          <label htmlFor="favorite">favorite:</label>
-          <input
-            className="w-60 border border-cyan-400 rounded-md px-2"
-            id="favorite"
-            name="favorite"
-            type="text"
-          />
-          <button className='w-40 border border-purple-500 rounded-md'>Submit</button>
-        </form>
-      </div>
-    </>
+    <div className="border border-orange-500 p-2 m-2">
+      <button 
+        onClick={() => setChileState(current => current+1)}
+        className='w-40 border border-purple-500 rounded-md'
+      >
+        update child state: {childState}
+      </button>
+    </div>
   )
 }
+function ReRenderTest (){
+  const [otherState, setOtherState] = useState(0);
+  const [key, setKey] = useState(0)
+
+  return (
+    <div key={key} className="flex flex-col gap-1 border border-orange-500 p-2 m-2">
+      <button 
+        onClick={() => setOtherState(current => current+1)}
+        className='w-40 border border-purple-500 rounded-md'
+      >
+        update state: {otherState}
+      </button>
+      <button 
+        onClick={() => setKey(current => current+1)}
+        className='w-40 border border-purple-500 rounded-md'
+      >
+        update key: {key}
+      </button>
+      <ChildComponent />
+    </div>
+  )
+  // return (
+  //   <>
+  //     <div className="border border-orange-500 p-2 m-2">
+  //       <form className='flex flex-col gap-1'>
+  //         <label htmlFor="myname">name:</label>
+  //         <input
+  //           className="w-60 border border-cyan-400 rounded-md px-2"
+  //           id="myname"
+  //           name="myname"
+  //           type="text"
+  //         />
+  //         <label htmlFor="favorite">favorite:</label>
+  //         <input
+  //           className="w-60 border border-cyan-400 rounded-md px-2"
+  //           id="favorite"
+  //           name="favorite"
+  //           type="text"
+  //         />
+  //         <button type='submit' className='w-40 border border-purple-500 rounded-md'>
+  //           Submit
+  //         </button>
+  //       </form>
+  //     </div>
+  //   </>
+  // )
+}
+
 function DarkMode (){
 
   const [darkMode, setDarkMode] = useState('System');
