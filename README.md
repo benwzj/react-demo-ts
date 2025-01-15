@@ -13,6 +13,11 @@ ReactDemo is a Demo app to run through many React Feature, like nevigation, cont
 - Book manage Page is showing how to implement REST APIs.
 - Space Missions Page is a CSS exercise.
 
+## Available Scripts
+- `npm install`: install dependencies
+- `npm run dev`: start web app
+- `npm run server`: start Json server
+
 ## JSONServer
 [Morn info](https://www.npmjs.com/package/json-server)
 
@@ -36,10 +41,6 @@ For example, you want to store states for your new functionality in this App, yo
 - More information at Unsplash website [doc](https://unsplash.com/documentation)
 - limitation: 50 API visits per minute
 
-## Available Scripts
-- `npm install` install dependencies
-- `npm run dev` start web app
-- `npm run server` start Json server
 
 ## Icons
 
@@ -104,12 +105,22 @@ You can get **svg** code for your project.
 
 Dropdown can substitute select element. You can easily change the outlook to fit your expectation.
 
-## Space Missions Page
+## Space Missions
 This React App can fetch rocket launchs data from Data Server, filter and display launchs.
 
-## GraphQL Client Page
+## GraphQL Client
 
+'GraphQL Client' is a tool which is used as a Client Inferface to test your GraphQL server.
+
+1. Configure your GraphQL Server URL. 
+2. Configure your operations. like get data, updae data, delete data etc.
+3. When you update or add data, these kind of mutation operation need Variables. you need configure your Variables.
+4. Also you can update Header for your operations as well.
+
+### Some Notes
+- Your GraphQL Server can be easily setup in Apollo GraphQL.
 - 'OperationList' is initiated from JsonServer. User can update the 'operation' in the list, but the operations won't update JsonServer until user Send the operation to GraphqlServer.
+
 
 ## FAQ
 
