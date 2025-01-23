@@ -47,7 +47,8 @@ function Sidebar() {
     { label: 'UI Test', path: '/ui-test', icon: "fas fa-syringe"},
     { label: 'Todos', path: '/todos', icon: "fas fa-list"},
     { label: 'Space Mission', path: '/space-mission', icon: "fas fa-rocket"},
-    { label: 'GraphQL Client', path: '/graphql', icon: "fas fa-chart-pie"}
+    { label: 'GraphQL Client', path: '/graphql', icon: "fas fa-chart-pie"},
+    { label: 'REST Client', path: '/rest-client', icon: "fas fa-chart-pie"}
   ];
 
   const renderedLinks = links.map((link) => {
